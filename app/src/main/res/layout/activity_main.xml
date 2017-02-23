@@ -10,8 +10,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.github.beetsbyninn.beets.MainActivity">
 
-    <TextView
+    <Button
+        android:text="Step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_below="@+id/btnPlay"
+        android:layout_alignStart="@+id/btnPlay"
+        android:layout_marginTop="62dp"
+        android:id="@+id/btnStep" />
+
+    <Button
+        android:text="Play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnPlay"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="155dp" />
 </RelativeLayout>
