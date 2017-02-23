@@ -5,15 +5,20 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 /**
- * Created by patriklarsson on 2017-02-23.
+ * A Service Connection between a service and a activity.
  */
-
 public class BeetsServiceConnection implements ServiceConnection {
     private MainActivity mMainAcitivty;
 
+    /**
+     * Gets a reference to the Main Activity.
+     * @param a
+     *      A Reference to main activity
+     */
     public BeetsServiceConnection(MainActivity a) {
         this.mMainAcitivty = a;
     }
+
 
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {

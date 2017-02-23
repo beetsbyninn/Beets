@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
- *
+ * The class listens for sensor events.
  */
 public class SensorHandler implements SensorEventListener {
     private static final String TAG = "SensorHandler";
@@ -19,20 +19,22 @@ public class SensorHandler implements SensorEventListener {
     private boolean mSensorFlag;
 
     /**
-     *
+     * Sets a context reference.
      * @param c
      */
     public SensorHandler(Context c) {
         mContext = c;
     }
 
-
+    /**
+     * Should be called when onCreate gets called from the service. It initializes the sensors used.
+     */
     public void onCreate() {
         initSensor();
     }
 
     /**
-     *
+     * Checks if the sensor is available and if the sensors are available the stepdector is initlised.
      */
     private void initSensor() {
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
@@ -65,10 +67,16 @@ public class SensorHandler implements SensorEventListener {
 
     }
 
+    /**
+     * Registers the sensors
+     */
     public void registerListener() {
         mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_UI);
     }
 
+    /**
+     * Should be called i onDestory calls on classes that has a reference to the object.
+     */
     public void onDestroy() {
         mSensorManager.unregisterListener(this);
     }

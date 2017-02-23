@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ *
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private BeetsService mBeetsService;
@@ -22,10 +25,19 @@ public class MainActivity extends AppCompatActivity {
         bindService();
     }
 
+    /**
+     * Sets a reference to the service
+     * @param beetsService
+     *      A Reference to the service.
+     */
     public void setService(BeetsService beetsService) {
         mBeetsService = beetsService;
     }
 
+    /**
+     * Sets a boolean flag if the service is bound.
+     * @param bound
+     */
     public void setBound(boolean bound) {
         mBound = bound;
     }
@@ -38,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Tries to bind the service.
+     */
     private void bindService() {
         mServiceConnection = new BeetsServiceConnection(this);
         Intent intent = new Intent(this, BeetsService.class);
