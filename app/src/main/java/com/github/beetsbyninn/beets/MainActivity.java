@@ -4,17 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.widget.Toast;
+
+import android.view.View;
+import android.widget.Button;
+
+import java.io.IOException;
+
 
 /**
  *
  */
 public class MainActivity extends AppCompatActivity {
+
     private static final String TAG = "MainActivity";
     private BeetsService mBeetsService;
     private boolean mBound = false;
     private BeetsServiceConnection mServiceConnection;
+
+
+    private MusicPlayer mMusicPlayer;
+    private Button mBtnPlay;
+    private Button mBtnStep;
+    private boolean mIsplaying = false;
 
 
     @Override
@@ -23,6 +37,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mServiceConnection = new BeetsServiceConnection(this);
         bindService();
+        mBtnPlay = (Button) findViewById(R.id.btnPlay);
+        mBtnPlay.setOnClickListener(new ButtonPlayListener());
+        mMusicPlayer = new MusicPlayer(this);
+        mMusicPlayer.initSongMediaPlayer();
+        try {
+            mMusicPlayer.initStepMediaPlayer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mBtnStep = (Button) findViewById(R.id.btnStep);
+        mBtnStep.setOnClickListener(new ButtonStepListener());
     }
 
     /**
@@ -61,6 +86,34 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(mBeetsService, "Service connection failed", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "bindService: Service connection failed");
+
+
+
+
+        }
+    }
+
+    private class ButtonPlayListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if(mIsplaying == false) {
+                mMusicPlayer.playSong();
+                mIsplaying = true;
+            }else if(mIsplaying){
+                mMusicPlayer.stopSong();
+                mIsplaying = false;
+            }
+        }
+    }
+
+    private class ButtonStepListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            try {
+                mMusicPlayer.playStep();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
