@@ -17,13 +17,15 @@ public class SensorHandler implements SensorEventListener {
     private Context mContext;
     private Sensor mStepDetector;
     private boolean mSensorFlag;
+    private StepDetectorListener mListener;
 
     /**
      * Sets a context reference.
      * @param c
      */
-    public SensorHandler(Context c) {
+    public SensorHandler(Context c, StepDetectorListener listener) {
         mContext = c;
+        mListener = listener;
     }
 
     /**
@@ -55,6 +57,7 @@ public class SensorHandler implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Log.d(TAG, "onSensorChanged: Step Detected");
+        mListener.onStepDetected();
     }
 
     /**
@@ -71,8 +74,9 @@ public class SensorHandler implements SensorEventListener {
      * Registers the sensors
      */
     public void registerListener() {
-        mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_GAME);
     }
+
 
     /**
      * Should be called i onDestory calls on classes that has a reference to the object.

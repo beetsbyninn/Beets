@@ -1,5 +1,6 @@
 package com.github.beetsbyninn.beets;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
@@ -13,9 +14,9 @@ import java.io.IOException;
 public class MusicPlayer {
     private MediaPlayer mSongMediaPlayer;
     private MediaPlayer mStepMediaPlayer;
-    private MainActivity mMainActivity;
+    private Context mMainActivity;
 
-    public MusicPlayer(MainActivity mainActivity){
+    public MusicPlayer(Context mainActivity){
         mMainActivity = mainActivity;
     }
 
@@ -33,8 +34,8 @@ public class MusicPlayer {
      * @throws IOException
      */
     public void initStepMediaPlayer() throws IOException {
-        mStepMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.stepsound);
-        mStepMediaPlayer.setVolume(0.2f,0.2f);
+        mStepMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.ride);
+        mStepMediaPlayer.setVolume(0.9f,0.9f);
 
     }
 

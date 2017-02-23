@@ -6,12 +6,16 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.LocaleList;
 
+import java.io.IOException;
+
 /**
  * The service listens for events from the sensor handler.
  */
-public class BeetsService extends Service {
-    private SensorHandler sensorHandler = new SensorHandler(this);
+public class BeetsService extends Service implements StepDetectorListener {
+    private SensorHandler sensorHandler = new SensorHandler(this,this);
     private LocalBinder mBinder = new LocalBinder();
+    private MusicPlayer mMusicPlayer;
+
 
     public BeetsService() {
     }
@@ -30,6 +34,12 @@ public class BeetsService extends Service {
     public void onCreate() {
         super.onCreate();
         sensorHandler.onCreate();
+        mMusicPlayer = new MusicPlayer(this);
+        try {
+            mMusicPlayer.initStepMediaPlayer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -37,6 +47,16 @@ public class BeetsService extends Service {
         super.onDestroy();
         sensorHandler.onDestroy();
     }
+
+    @Override
+    public void onStepDetected() {
+        try {
+            mMusicPlayer.playStep();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      *  Returns a reference to the service.
