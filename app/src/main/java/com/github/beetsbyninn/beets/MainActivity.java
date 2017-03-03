@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if(mIsplaying == false) {
+                mBeetsService.startSong(120,System.currentTimeMillis());
                 mMusicPlayer.playSong();
                 mIsplaying = true;
             }else if(mIsplaying){

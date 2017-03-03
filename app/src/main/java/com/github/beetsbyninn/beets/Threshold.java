@@ -74,6 +74,7 @@ public class Threshold {
                 Log.d(TAG, "post10Sec: " + score);
             }
         };
+        timer = new Timer();
     }
 
     /**
