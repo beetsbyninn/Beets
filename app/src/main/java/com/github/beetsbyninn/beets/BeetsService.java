@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.os.LocaleList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * The service listens for events from the sensor handler.
@@ -15,6 +17,7 @@ public class BeetsService extends Service implements StepDetectorListener {
     private SensorHandler sensorHandler = new SensorHandler(this,this);
     private LocalBinder mBinder = new LocalBinder();
     private MusicPlayer mMusicPlayer;
+    private ArrayList timeStamps = new ArrayList();
 
 
     public BeetsService() {
@@ -52,9 +55,15 @@ public class BeetsService extends Service implements StepDetectorListener {
     public void onStepDetected() {
         try {
             mMusicPlayer.playStep();
+            stepTaken();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void stepTaken() {
+        long currentTime = System.currentTimeMillis();
+        timeStamps.add(currentTime);
     }
 
 
