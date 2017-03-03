@@ -2,6 +2,7 @@ package com.github.beetsbyninn.beets;
 
 import android.util.Log;
 
+import java.util.Timer;
 import java.util.TimerTask;
 
 /**
@@ -17,6 +18,8 @@ public class Threshold {
     private long mLastStepTime;
     private FeedbackListener mFeedBackListener;
     private int mBeatsInInterval;
+    private Timer timer;
+
 
     /**
      * Constant used for measuring time when step should count as perfect.
@@ -51,13 +54,37 @@ public class Threshold {
     }
 
     /**
-     * Sets the time where threshould should start counting.
+     * Constructor is only used for testing.
+     * @param perfect
+     * @param good
+     * @param mBPM
+     */
+    public Threshold(int perfect, int good, int mBPM) {
+        this.mBPM = mBPM;
+//        this.mFeedBackListener = mFeedBackListener;
+        M_PERFECT = perfect;
+        M_GOOD = good;
+
+        mBeatsInInterval = (mBPM / (60)) * 10;
+
+        mFeedBackListener = new FeedbackListener() {
+
+            @Override
+            public void post10Sec(double score) {
+                Log.d(TAG, "post10Sec: " + score);
+            }
+        };
+    }
+
+    /**
+     * Starts the socre counting    
      * @param startTime
      *      A long with a timestamp.
      */
-    public void setStartTime(long startTime) {
+    public void startThreshold(long startTime) {
         mStartTime = startTime;
         mLastStepTime = startTime; // First step should be at time 0 in song.
+        timer.schedule(new FeedBackTimer(), 0, 10000);
     }
 
     /**
