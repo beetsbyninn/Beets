@@ -24,7 +24,7 @@ public class MusicPlayer {
      * Initializes the StepMediaPlayer and the SongMediaplayer
      */
     public void initSongMediaPlayer() {
-        mSongMediaPlayer = MediaPlayer.create(mMainActivity,R.raw.lowrider);
+        mSongMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.callmemaybe);
 
 
     }
