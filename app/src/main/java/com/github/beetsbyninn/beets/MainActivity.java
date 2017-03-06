@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  *
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppComptActivty {
 
     private static final String TAG = "MainActivity";
     private BeetsService mBeetsService;

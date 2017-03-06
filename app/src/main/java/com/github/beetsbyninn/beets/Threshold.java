@@ -66,6 +66,7 @@ public class Threshold {
         M_GOOD = good;
 
         mBeatsInInterval = (mBPM / (60)) * 10;
+        Log.d(TAG, "Threshold: " + mBeatsInInterval);
 
         mFeedBackListener = new FeedbackListener() {
 
@@ -86,6 +87,7 @@ public class Threshold {
         mStartTime = startTime;
         mLastStepTime = startTime; // First step should be at time 0 in song.
         timer.schedule(new FeedBackTimer(), 0, 10000);
+        Log.d(TAG, "startThreshold: ");
     }
 
     /**
@@ -93,18 +95,20 @@ public class Threshold {
      * @param stepTimeStamp
      */
     public void postTimeStamp(long stepTimeStamp) {
-        long difference = stepTimeStamp - mLastStepTime;
+        long difference = Math .abs(stepTimeStamp - mLastStepTime);
+        Log.d(TAG, "postTimeStamp: " + difference);
         if (difference <= M_PERFECT) {
-            Log.d(TAG, "postTimeStamp: PERFECT" + mCurrentScore + "/10");
             mCurrentScore += 1;
+            Log.d(TAG, "postTimeStamp: PERFECT" + mCurrentScore + "/10");
         } else if(difference <= M_GOOD) {
-            Log.d(TAG, "postTimeStamp: GOOD" + mCurrentScore + "/10");
             mCurrentScore += 0.75;
+            Log.d(TAG, "postTimeStamp: GOOD" + mCurrentScore + "/10");
+
         } else {
             mCurrentScore -= 1.25;
             Log.d(TAG, "postTimeStamp: FAIL: " + mCurrentScore + "/10");
-
         }
+        mLastStepTime = stepTimeStamp;
     }
 
     private class FeedBackTimer extends TimerTask {

@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  * The service listens for events from the sensor handler.
  */
 public class BeetsService extends Service implements StepDetectorListener {
+    private static final String TAG = "BeetsService";
     private SensorHandler sensorHandler = new SensorHandler(this,this);
     private LocalBinder mBinder = new LocalBinder();
     private MusicPlayer mMusicPlayer;
@@ -31,7 +33,7 @@ public class BeetsService extends Service implements StepDetectorListener {
     }
 
     public void startSong(int bpm, long startTime) {
-        mThreshold = new Threshold(80, 70, bpm);
+        mThreshold = new Threshold(100, 250, bpm);
         mThreshold.startThreshold(startTime);
     }
 
@@ -56,17 +58,19 @@ public class BeetsService extends Service implements StepDetectorListener {
 
     @Override
     public void onStepDetected() {
-        try {
-            mMusicPlayer.playStep();
+        Log.d(TAG, "onStepDetected: ");
+//        try {
+//            mMusicPlayer.playStep();
             stepTaken();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void stepTaken() {
         long currentTime = System.currentTimeMillis();
         timeStamps.add(currentTime);
+        mThreshold.postTimeStamp(currentTime);
     }
 
 
