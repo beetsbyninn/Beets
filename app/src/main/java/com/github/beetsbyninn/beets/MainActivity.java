@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private BeetsService mBeetsService;
     private boolean mBound = false;
     private BeetsServiceConnection mServiceConnection;
-
+    private GaugeFragment gaugeFragment;
 
     private MusicPlayer mMusicPlayer;
     private boolean mIsplaying = false;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         mMusicPlayer = new MusicPlayer(this);
         mMusicPlayer.initSongMediaPlayer();
-        GaugeFragment gaugeFragment = new GaugeFragment();
+         gaugeFragment = new GaugeFragment();
         setFragment(gaugeFragment, false);
     }
 
@@ -113,5 +113,16 @@ public class MainActivity extends AppCompatActivity {
             ft.addToBackStack(null);
         }
         ft.commit();
+    }
+
+    public void update(final double score){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gaugeFragment.updateScore(score);
+            }
+        });
+
+
     }
 }

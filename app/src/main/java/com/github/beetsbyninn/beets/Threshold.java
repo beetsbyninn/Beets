@@ -20,6 +20,7 @@ public class Threshold {
     private Timer timer;
     private StepBuffer buffer;
     private Worker worker;
+    private MainActivity mListener;
 
 
     /**
@@ -61,7 +62,7 @@ public class Threshold {
      * @param good
      * @param mBPM
      */
-    public Threshold(int perfect, int good, int mBPM) {
+    public Threshold(int perfect, int good, int mBPM,MainActivity mListener) {
         this.mBPM = mBPM;
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
@@ -69,7 +70,7 @@ public class Threshold {
         buffer = new StepBuffer();
         mBeatsInInterval = (mBPM / (60)) * 10;
         Log.d(TAG, "Threshold: " + mBeatsInInterval);
-
+        this.mListener=mListener;
         mFeedBackListener = new FeedbackListener() {
 
             @Override
@@ -78,6 +79,7 @@ public class Threshold {
             }
         };
         timer = new Timer();
+
     }
 
     /**
@@ -111,7 +113,9 @@ public class Threshold {
         @Override
         public void run() {
             mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
+            mListener.update(mCurrentScore);
             mCurrentScore = 0;
+
         }
     }
 
@@ -154,6 +158,8 @@ public class Threshold {
                             mCurrentScore -= 1.25;
                             Log.e(TAG, "FAIL");
                         }
+
+
                         mLastStepTime = currentStep;
                     } catch (InterruptedException e) {
                         e.printStackTrace();

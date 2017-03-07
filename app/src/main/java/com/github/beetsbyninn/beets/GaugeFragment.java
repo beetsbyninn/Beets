@@ -48,9 +48,12 @@ public class GaugeFragment extends Fragment {
      * Sets the bar value.
      * @param score
      */
-    public void setTvBar(int score) {
-        barValue+=score;
-        tvBar.setText(""+barValue+"/"+maxBarValue);
+    public void updateScore(double score) {
+        if(barValue<=maxBarValue&&barValue>=0){
+            barValue+=score;
+            tvBar.setText(""+barValue+"/"+maxBarValue);
+        }
+
     }
 
     private class ButtonPlayListener implements View.OnClickListener {

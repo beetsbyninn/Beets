@@ -18,6 +18,7 @@ public class BeetsService extends Service implements StepDetectorListener {
     private LocalBinder mBinder = new LocalBinder();
     private MusicPlayer mMusicPlayer;
     private ArrayList timeStamps = new ArrayList();
+    private MainActivity mListener;
 
     private Threshold mThreshold;
 
@@ -40,7 +41,7 @@ public class BeetsService extends Service implements StepDetectorListener {
      */
     public void startSong(int bpm, long startTime) {
         sensorHandler.registerListener();
-        mThreshold = new Threshold(25, 100, bpm);
+        mThreshold = new Threshold(25, 100, bpm,mListener);
         mThreshold.startThreshold(startTime);
     }
 
@@ -85,5 +86,13 @@ public class BeetsService extends Service implements StepDetectorListener {
         BeetsService getService() {
             return BeetsService.this;
         }
+    }
+
+    /**
+     * Set the activity that wants to read steps. The Activity implements a interface called ChangeListner to change the activity.
+     * @param listener
+     */
+    public void setListenerActivity(MainActivity listener) {
+        mListener = listener;
     }
 }
