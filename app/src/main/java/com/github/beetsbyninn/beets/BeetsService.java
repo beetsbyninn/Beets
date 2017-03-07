@@ -33,7 +33,7 @@ public class BeetsService extends Service implements StepDetectorListener {
     }
 
     public void startSong(int bpm, long startTime) {
-        mThreshold = new Threshold(100, 250, bpm);
+        mThreshold = new Threshold(75, 175, bpm);
         mThreshold.startThreshold(startTime);
     }
 

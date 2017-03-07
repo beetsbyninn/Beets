@@ -95,18 +95,19 @@ public class Threshold {
      * @param stepTimeStamp
      */
     public void postTimeStamp(long stepTimeStamp) {
-        long difference = Math .abs(stepTimeStamp - mLastStepTime);
+        Log.d(TAG, "stepTimeStamp: " + stepTimeStamp);
+        Log.d(TAG, "stepTimeStamp: " + mLastStepTime);
+        long difference = Math.abs(stepTimeStamp - mLastStepTime);
         Log.d(TAG, "postTimeStamp: " + difference);
         if (difference <= M_PERFECT) {
             mCurrentScore += 1;
-            Log.d(TAG, "postTimeStamp: PERFECT" + mCurrentScore + "/10");
+            Log.e(TAG, "postTimeStamp: PERFECT: " + mCurrentScore + "/10");
         } else if(difference <= M_GOOD) {
             mCurrentScore += 0.75;
-            Log.d(TAG, "postTimeStamp: GOOD" + mCurrentScore + "/10");
-
+            Log.e(TAG, "postTimeStamp: GOOD: " + mCurrentScore + "/10");
         } else {
             mCurrentScore -= 1.25;
-            Log.d(TAG, "postTimeStamp: FAIL: " + mCurrentScore + "/10");
+            Log.e(TAG, "postTimeStamp: FAIL: " + mCurrentScore + "/10");
         }
         mLastStepTime = stepTimeStamp;
     }
