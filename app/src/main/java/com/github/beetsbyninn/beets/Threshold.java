@@ -1,5 +1,6 @@
 package com.github.beetsbyninn.beets;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.Timer;
@@ -21,6 +22,7 @@ public class Threshold {
     private StepBuffer buffer;
     private Worker worker;
     private MainActivity mListener;
+    private Context mContext;
 
 
     /**
@@ -62,7 +64,7 @@ public class Threshold {
      * @param good
      * @param mBPM
      */
-    public Threshold(int perfect, int good, int mBPM,MainActivity mListener) {
+    public Threshold(int perfect, int good, int mBPM,MainActivity mListener, Context context) {
         this.mBPM = mBPM;
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
@@ -79,6 +81,7 @@ public class Threshold {
             }
         };
         timer = new Timer();
+        mContext = context;
 
     }
 
@@ -126,11 +129,13 @@ public class Threshold {
         private long mLastStepTime = 0;
         private static final String TAG = "Worker";
         boolean running;
+        private Vibrate mVibrator;
 
         @Override
         public void start() {
             super.start();
             running = true;
+            mVibrator = new Vibrate(mContext);
         }
 
         public void cancel() {
@@ -150,12 +155,15 @@ public class Threshold {
                         Log.d(TAG, "difference: " + difference);
                         if (difference <= M_PERFECT) {
                             mCurrentScore += 1;
+                            mVibrator.vibrate(Vibrate.VIBRATE_PERFECT);
                             Log.e(TAG, "PERFECT");
                         } else if(difference <= M_GOOD) {
                             mCurrentScore += 0.75;
+                            mVibrator.vibrate(Vibrate.VIBRATE_GOOD);
                             Log.e(TAG, "GOOD");
                         } else {
                             mCurrentScore -= 1.25;
+                            mVibrator.vibrate(Vibrate.VIBRATE_FAIL);
                             Log.e(TAG, "FAIL");
                         }
 
