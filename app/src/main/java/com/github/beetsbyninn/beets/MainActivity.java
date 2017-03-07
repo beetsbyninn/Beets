@@ -1,5 +1,8 @@
 package com.github.beetsbyninn.beets;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private MusicPlayer mMusicPlayer;
-    private Button mBtnPlay;
-    private Button mBtnStep;
     private boolean mIsplaying = false;
 
 
@@ -37,17 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mServiceConnection = new BeetsServiceConnection(this);
         bindService();
-        mBtnPlay = (Button) findViewById(R.id.btnPlay);
-        mBtnPlay.setOnClickListener(new ButtonPlayListener());
+
         mMusicPlayer = new MusicPlayer(this);
         mMusicPlayer.initSongMediaPlayer();
-        try {
-            mMusicPlayer.initStepMediaPlayer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mBtnStep = (Button) findViewById(R.id.btnStep);
-        mBtnStep.setOnClickListener(new ButtonStepListener());
+        GaugeFragment gaugeFragment = new GaugeFragment();
+        setFragment(gaugeFragment, false);
     }
 
     /**
@@ -93,28 +88,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ButtonPlayListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if(mIsplaying == false) {
-                mBeetsService.startSong(120,System.currentTimeMillis());
-                mMusicPlayer.playSong();
-                mIsplaying = true;
-            }else if(mIsplaying){
-                mMusicPlayer.stopSong();
-                mIsplaying = false;
-            }
+
+
+    /**
+     *
+     */
+    public void initalizaise() {
+        if(mIsplaying == false) {
+            mBeetsService.startSong(120,System.currentTimeMillis());
+            mMusicPlayer.playSong();
+            mIsplaying = true;
+        }else if(mIsplaying){
+            mMusicPlayer.stopSong();
+            mIsplaying = false;
         }
     }
 
-    private class ButtonStepListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            try {
-                mMusicPlayer.playStep();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+    public void setFragment(Fragment fragment, boolean backstack) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.container, fragment);
+        if (backstack) {
+            ft.addToBackStack(null);
         }
+        ft.commit();
     }
 }
