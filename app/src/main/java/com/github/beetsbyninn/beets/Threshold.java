@@ -10,15 +10,16 @@ import java.util.TimerTask;
  */
 public class Threshold {
     private static final String TAG = "Threshold";
-    
+
     private int mCurrentMaxScore = 0;
     private double mCurrentScore = 0;
     private long mStartTime;
     private int mBPM;
-    private long mLastStepTime;
     private FeedbackListener mFeedBackListener;
     private int mBeatsInInterval;
     private Timer timer;
+    private StepBuffer buffer;
+    private Worker worker;
 
 
     /**
@@ -50,6 +51,7 @@ public class Threshold {
         M_PERFECT = perfect;
         M_GOOD = good;
 
+        buffer = new StepBuffer();
         mBeatsInInterval = (mBPM / (60)) * 10;
     }
 
@@ -64,7 +66,7 @@ public class Threshold {
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
         M_GOOD = good;
-
+        buffer = new StepBuffer();
         mBeatsInInterval = (mBPM / (60)) * 10;
         Log.d(TAG, "Threshold: " + mBeatsInInterval);
 
@@ -85,31 +87,23 @@ public class Threshold {
      */
     public void startThreshold(long startTime) {
         mStartTime = startTime;
-        mLastStepTime = startTime; // First step should be at time 0 in song.
         timer.schedule(new FeedBackTimer(), 0, 10000);
         Log.d(TAG, "startThreshold: ");
+        worker = new Worker();
+        worker.start();
     }
 
     /**
      *
-     * @param stepTimeStamp
+     * @param stepTimeStamp§
      */
     public void postTimeStamp(long stepTimeStamp) {
-        Log.d(TAG, "stepTimeStamp: " + stepTimeStamp);
-        Log.d(TAG, "stepTimeStamp: " + mLastStepTime);
-        long difference = Math.abs(stepTimeStamp - mLastStepTime);
-        Log.d(TAG, "postTimeStamp: " + difference);
-        if (difference <= M_PERFECT) {
-            mCurrentScore += 1;
-            Log.e(TAG, "postTimeStamp: PERFECT: " + mCurrentScore + "/10");
-        } else if(difference <= M_GOOD) {
-            mCurrentScore += 0.75;
-            Log.e(TAG, "postTimeStamp: GOOD: " + mCurrentScore + "/10");
-        } else {
-            mCurrentScore -= 1.25;
-            Log.e(TAG, "postTimeStamp: FAIL: " + mCurrentScore + "/10");
+        Log.d(TAG, "postTimeStamp: running " );
+        try {
+            buffer.add(stepTimeStamp);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        mLastStepTime = stepTimeStamp;
     }
 
     private class FeedBackTimer extends TimerTask {
@@ -118,6 +112,53 @@ public class Threshold {
         public void run() {
             mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
             mCurrentScore = 0;
+        }
+    }
+
+    private class Worker extends Thread {
+        private long mLastStepTime = 0;
+        private static final String TAG = "Worker";
+        boolean running;
+
+        @Override
+        public void start() {
+            super.start();
+            running = true;
+        }
+
+        public void cancel() {
+            running = false;
+        }
+
+        @Override
+        public void run() {
+            while (running) {
+                if (mLastStepTime != 0) {
+                    Log.e(TAG, "run: lastStepTime" + mLastStepTime);
+                    try {
+                        long currentStep = buffer.remove();
+                        long difference = Math.abs( 500 -(currentStep - mLastStepTime));
+                        Log.d(TAG, "currentStep: " + currentStep);
+                        Log.d(TAG, "lastStepTime: " + mLastStepTime);
+                        Log.d(TAG, "difference: " + difference);
+                        if (difference <= M_PERFECT) {
+                            mCurrentScore += 1;
+                            Log.e(TAG, "PERFECT");
+                        } else if(difference <= M_GOOD) {
+                            mCurrentScore += 0.75;
+                            Log.e(TAG, "GOOD");
+                        } else {
+                            mCurrentScore -= 1.25;
+                            Log.e(TAG, "FAIL");
+                        }
+                        mLastStepTime = currentStep;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mLastStepTime = System.currentTimeMillis();
+                }
+            }
         }
     }
 }

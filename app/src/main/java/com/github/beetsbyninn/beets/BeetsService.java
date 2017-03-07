@@ -27,12 +27,12 @@ public class BeetsService extends Service implements StepDetectorListener {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        sensorHandler.registerListener();
         return mBinder;
 
     }
 
     public void startSong(int bpm, long startTime) {
+        sensorHandler.registerListener();
         mThreshold = new Threshold(75, 175, bpm);
         mThreshold.startThreshold(startTime);
     }
@@ -59,17 +59,11 @@ public class BeetsService extends Service implements StepDetectorListener {
     @Override
     public void onStepDetected() {
         Log.d(TAG, "onStepDetected: ");
-//        try {
-//            mMusicPlayer.playStep();
-            stepTaken();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        stepTaken();
     }
 
     private void stepTaken() {
         long currentTime = System.currentTimeMillis();
-        timeStamps.add(currentTime);
         mThreshold.postTimeStamp(currentTime);
     }
 

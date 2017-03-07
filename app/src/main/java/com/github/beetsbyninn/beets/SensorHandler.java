@@ -8,6 +8,8 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * The class listens for sensor events.
  */
@@ -18,6 +20,7 @@ public class SensorHandler implements SensorEventListener {
     private Sensor mStepDetector;
     private boolean mSensorFlag;
     private StepDetectorListener mListener;
+    private long lastStepTimeStamp;
 
     /**
      * Sets a context reference.
@@ -56,8 +59,10 @@ public class SensorHandler implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Log.d(TAG, "onSensorChanged: Step Detected");
-        mListener.onStepDetected();
+        if ((sensorEvent.timestamp - lastStepTimeStamp) > 30000000L) {
+            mListener.onStepDetected();
+        }
+        lastStepTimeStamp = sensorEvent.timestamp;
     }
 
     /**
@@ -74,7 +79,7 @@ public class SensorHandler implements SensorEventListener {
      * Registers the sensors
      */
     public void registerListener() {
-        mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_UI);
     }
 
 
