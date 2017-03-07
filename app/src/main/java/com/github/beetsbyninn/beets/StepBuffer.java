@@ -12,7 +12,6 @@ import java.util.List;
 public class StepBuffer {
     private static final String TAG = "StepBuffer";
     private List<Long> stepTimeStamps = new ArrayList<>();
-    private long lastStepTime = 0;
 
     public synchronized long remove() throws InterruptedException {
         while (stepTimeStamps.isEmpty()) {
@@ -29,7 +28,6 @@ public class StepBuffer {
             wait();
         }
         stepTimeStamps.add(timeStamp);
-        lastStepTime = timeStamp;
         notifyAll();
     }
 }

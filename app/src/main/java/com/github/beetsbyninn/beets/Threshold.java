@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * author Patrik Larsson, Ludwig Ninn
+ * author Patrik Larsson, Ludwig Ninn, Alexander Johansson.
  */
 public class Threshold {
     private static final String TAG = "Threshold";
@@ -115,6 +115,9 @@ public class Threshold {
         }
     }
 
+    /**
+     * A Thread that is  processing step data from buffer.
+     */
     private class Worker extends Thread {
         private long mLastStepTime = 0;
         private static final String TAG = "Worker";
