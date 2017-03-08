@@ -9,14 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-public class InfoActivity extends FragmentActivity {
 
     private MyAdapter mAdapter;
     private ViewPager mPager;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,5 +50,4 @@ public class InfoActivity extends FragmentActivity {
             }
         }
     }
-
 }
