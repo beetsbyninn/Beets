@@ -30,7 +30,7 @@
         android:background="@drawable/circular"
         style="?android:attr/progressBarStyleHorizontal"
         android:max="100"
-        android:progress="86"
+        android:progress="0"
         android:layout_above="@+id/btnPlay"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="48dp" />

@@ -21,7 +21,7 @@ public class Threshold {
     private Timer timer;
     private Timer mStepTimer;
     private StepBuffer buffer;
-    private Worker worker;
+   // private Worker worker;
     private MainActivity mListener;
     private Context mContext;
     private double[] perodicArray;
@@ -184,7 +184,6 @@ public class Threshold {
         public void run() {
 //            mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
             mListener.update(mCurrentScore);
-            mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
             double temp = mBarValue + mCurrentScore;
             if (100 >= temp && 0 <= temp){
                 mBarValue += mCurrentScore;
@@ -212,8 +211,8 @@ public class Threshold {
         @Override
         public void run() {
             try {
-                long timeStamp = buffer.remove();
-                double currentTimeInSong = (timeStamp - mStartTime) / 1000.0;
+                mCurrentStep = buffer.remove();
+                double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
                 int currentBeat = getBeatInSong(currentTimeInSong);
                 double differenceNext = (perodicArray[currentBeat + 1]  % intervalLength) * 1000.0;
                 double difference = (currentTimeInSong % intervalLength) * 1000.0;
@@ -223,9 +222,10 @@ public class Threshold {
 //                Log.i(TAG, "nextdiff: " + differenceNext);
                 Log.i(TAG, "run: " + difference);
                 if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
+                    mCurrentScore += 1;
                     Log.e(TAG, "PERFECT");
                 } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
-
+                    mCurrentScore += 0.75;
                     Log.e(TAG, "GOOD");
                 } else {
                     Log.e(TAG, "FAIL");
@@ -246,7 +246,7 @@ public class Threshold {
 
     /**
      * A Thread that is  processing step data from buffer.
-     */
+
     private class Worker extends Thread {
         private long mLastStepTime = 0;
         private static final String TAG = "Worker";
@@ -299,4 +299,5 @@ public class Threshold {
             }
         }
     }
+     */
 }
