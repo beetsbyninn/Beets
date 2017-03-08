@@ -24,6 +24,7 @@ public class GaugeFragment extends Fragment {
     private int barValue;
     private TextView tvBar;
     private Button mBtnPlay;
+    private boolean isPlaying = false;
 
     public GaugeFragment() {
         // Required empty public constructor
@@ -60,6 +61,13 @@ public class GaugeFragment extends Fragment {
         @Override
         public void onClick(View view) {
             mainActivty.initalizaise();
+            if(!isPlaying) {
+                mBtnPlay.setBackgroundResource(R.drawable.stopbtn);
+                isPlaying = true;
+            }else{
+                mBtnPlay.setBackgroundResource(R.drawable.playbtn);
+                isPlaying = false;
+            }
         }
     }
 
