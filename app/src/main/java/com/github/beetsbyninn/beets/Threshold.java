@@ -1,24 +1,28 @@
 package com.github.beetsbyninn.beets;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * author Patrik Larsson, Ludwig Ninn
+ * author Patrik Larsson, Ludwig Ninn, Alexander Johansson.
  */
 public class Threshold {
     private static final String TAG = "Threshold";
-    
+
     private int mCurrentMaxScore = 0;
     private double mCurrentScore = 0;
     private long mStartTime;
     private int mBPM;
-    private long mLastStepTime;
     private FeedbackListener mFeedBackListener;
     private int mBeatsInInterval;
     private Timer timer;
+    private StepBuffer buffer;
+    private Worker worker;
+    private MainActivity mListener;
+    private Context mContext;
 
 
     /**
@@ -50,6 +54,7 @@ public class Threshold {
         M_PERFECT = perfect;
         M_GOOD = good;
 
+        buffer = new StepBuffer();
         mBeatsInInterval = (mBPM / (60)) * 10;
     }
 
@@ -59,15 +64,15 @@ public class Threshold {
      * @param good
      * @param mBPM
      */
-    public Threshold(int perfect, int good, int mBPM) {
+    public Threshold(int perfect, int good, int mBPM,MainActivity mListener, Context context) {
         this.mBPM = mBPM;
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
         M_GOOD = good;
-
+        buffer = new StepBuffer();
         mBeatsInInterval = (mBPM / (60)) * 10;
         Log.d(TAG, "Threshold: " + mBeatsInInterval);
-
+        this.mListener=mListener;
         mFeedBackListener = new FeedbackListener() {
 
             @Override
@@ -76,6 +81,8 @@ public class Threshold {
             }
         };
         timer = new Timer();
+        mContext = context;
+
     }
 
     /**
@@ -85,30 +92,23 @@ public class Threshold {
      */
     public void startThreshold(long startTime) {
         mStartTime = startTime;
-        mLastStepTime = startTime; // First step should be at time 0 in song.
         timer.schedule(new FeedBackTimer(), 0, 10000);
         Log.d(TAG, "startThreshold: ");
+        worker = new Worker();
+        worker.start();
     }
 
     /**
      *
-     * @param stepTimeStamp
+     * @param stepTimeStamp§
      */
     public void postTimeStamp(long stepTimeStamp) {
-        long difference = Math .abs(stepTimeStamp - mLastStepTime);
-        Log.d(TAG, "postTimeStamp: " + difference);
-        if (difference <= M_PERFECT) {
-            mCurrentScore += 1;
-            Log.d(TAG, "postTimeStamp: PERFECT" + mCurrentScore + "/10");
-        } else if(difference <= M_GOOD) {
-            mCurrentScore += 0.75;
-            Log.d(TAG, "postTimeStamp: GOOD" + mCurrentScore + "/10");
-
-        } else {
-            mCurrentScore -= 1.25;
-            Log.d(TAG, "postTimeStamp: FAIL: " + mCurrentScore + "/10");
+        Log.d(TAG, "postTimeStamp: running " );
+        try {
+            buffer.add(stepTimeStamp);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        mLastStepTime = stepTimeStamp;
     }
 
     private class FeedBackTimer extends TimerTask {
@@ -116,7 +116,66 @@ public class Threshold {
         @Override
         public void run() {
             mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
+            mListener.update(mCurrentScore);
             mCurrentScore = 0;
+
+        }
+    }
+
+    /**
+     * A Thread that is  processing step data from buffer.
+     */
+    private class Worker extends Thread {
+        private long mLastStepTime = 0;
+        private static final String TAG = "Worker";
+        boolean running;
+        private Vibrate mVibrator;
+
+        @Override
+        public void start() {
+            super.start();
+            running = true;
+            mVibrator = new Vibrate(mContext);
+        }
+
+        public void cancel() {
+            running = false;
+        }
+
+        @Override
+        public void run() {
+            while (running) {
+                if (mLastStepTime != 0) {
+                    Log.e(TAG, "run: lastStepTime" + mLastStepTime);
+                    try {
+                        long currentStep = buffer.remove();
+                        long difference = Math.abs( 500 -(currentStep - mLastStepTime));
+                        Log.d(TAG, "currentStep: " + currentStep);
+                        Log.d(TAG, "lastStepTime: " + mLastStepTime);
+                        Log.d(TAG, "difference: " + difference);
+                        if (difference <= M_PERFECT) {
+                            mCurrentScore += 1;
+                            mVibrator.vibrate(Vibrate.VIBRATE_PERFECT);
+                            Log.e(TAG, "PERFECT");
+                        } else if(difference <= M_GOOD) {
+                            mCurrentScore += 0.75;
+                            mVibrator.vibrate(Vibrate.VIBRATE_GOOD);
+                            Log.e(TAG, "GOOD");
+                        } else {
+                            mCurrentScore -= 1.25;
+                            mVibrator.vibrate(Vibrate.VIBRATE_FAIL);
+                            Log.e(TAG, "FAIL");
+                        }
+
+
+                        mLastStepTime = currentStep;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mLastStepTime = System.currentTimeMillis();
+                }
+            }
         }
     }
 }

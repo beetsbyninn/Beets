@@ -18,6 +18,7 @@ public class BeetsService extends Service implements StepDetectorListener {
     private LocalBinder mBinder = new LocalBinder();
     private MusicPlayer mMusicPlayer;
     private ArrayList timeStamps = new ArrayList();
+    private MainActivity mListener;
 
     private Threshold mThreshold;
 
@@ -27,13 +28,20 @@ public class BeetsService extends Service implements StepDetectorListener {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        sensorHandler.registerListener();
         return mBinder;
 
     }
 
+    /**
+     * Themethod createas a new threshold object that should count the score of the song.
+     * @param bpm
+     *      The bpm of the current song.
+     * @param startTime
+     *      The start time of the song.
+     */
     public void startSong(int bpm, long startTime) {
-        mThreshold = new Threshold(100, 250, bpm);
+        sensorHandler.registerListener();
+        mThreshold = new Threshold(25, 100, bpm,mListener, this);
         mThreshold.startThreshold(startTime);
     }
 
@@ -59,17 +67,14 @@ public class BeetsService extends Service implements StepDetectorListener {
     @Override
     public void onStepDetected() {
         Log.d(TAG, "onStepDetected: ");
-//        try {
-//            mMusicPlayer.playStep();
-            stepTaken();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        stepTaken();
     }
 
+    /**
+     * The method tells the threshold that a step is taken.
+     */
     private void stepTaken() {
         long currentTime = System.currentTimeMillis();
-        timeStamps.add(currentTime);
         mThreshold.postTimeStamp(currentTime);
     }
 
@@ -81,5 +86,13 @@ public class BeetsService extends Service implements StepDetectorListener {
         BeetsService getService() {
             return BeetsService.this;
         }
+    }
+
+    /**
+     * Set the activity that wants to read steps. The Activity implements a interface called ChangeListner to change the activity.
+     * @param listener
+     */
+    public void setListenerActivity(MainActivity listener) {
+        mListener = listener;
     }
 }
