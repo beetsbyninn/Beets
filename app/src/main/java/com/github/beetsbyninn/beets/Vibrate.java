@@ -13,23 +13,24 @@ public class Vibrate {
     private Vibrator mVibrator;
 
     // Constant vibration types
-    public static final int VIBRATE_FAIL = 1;
-    public static final int VIBRATE_GOOD = 2;
-    public static final int VIBRATE_PERFECT = 3;
-
-    public static final int VIBRATE_START = 4;
+    public static final int VIBRATION_FIRST =1;
+    public static final int VIBRATION_SECOND = 2;
+    public static final int VIBRATION_THIRD = 3;
+    public static final int VIBRATION_FOURTH = 4;
     public static final int VIBRATE_END = 5;
-    public static final int VIBRATE_CONTINUOUS_PATTERN = 6;
+
 
     // TODO: Patterns are not thoroughly tested, needs calibration
     // Constant vibration patterns
-    private static final long[] VIBRATION_PATTERN_FAIL = {0, 100, 50, 100, 50, 100, 50};
-    private static final long[] VIBRATION_PATTERN_GOOD = {0, 100, 30, 100, 30, 100, 30, 70, 50, 150};
-    private static final long[] VIBRATION_PATTERN_PERFECT = {0, 50, 20, 50, 100, 100, 100, 100, 50, 70, 50, 70, 50, 150};
+   // private static final long[] VIBRATION_PATTERN_FAIL = {0, 100, 50, 100, 50, 100, 50};
+   // private static final long[] VIBRATION_PATTERN_GOOD = {0, 100, 30, 100, 30, 100, 30, 70, 50, 150};
+   // private static final long[] VIBRATION_PATTERN_PERFECT = {0, 50, 20, 50, 100, 100, 100, 100, 50, 70, 50, 70, 50, 150};
+    private static final long[] VIBRATION_PATTERN_FIRST = {0, 100,175,200,250};
+    private static final long[] VIBRATION_PATTERN_SECOND = {0, 300, 375,400,450};
+    private static final long[] VIBRATION_PATTERN_THIRD = {0, 600,675,700,750};
+    private static final long[] VIBRATION_PATTERN_FOURTH = {0, 800,875,900,950};
+    private static final long[] VIBRATION_PATTERN_END = {0,2000 ,3000,4000,5000};
 
-    private static final long[] VIBRATION_PATTERN_START = {0, 300, 100, 300, 100, 300};
-    private static final long[] VIBRATION_PATTERN_END = {0, 1000};
-    private static final long[] VIBRATION_PATTERN_CONTINUOUS = {0, 400, 1000};
 
     /**
      * Vibrate constructor initiates a Vibrator from system services, requires application context
@@ -79,24 +80,23 @@ public class Vibrate {
      */
     public void vibrate(int constant) {
         switch(constant) {
-            case VIBRATE_FAIL:
-                mVibrator.vibrate(VIBRATION_PATTERN_FAIL, -1);
+
+            case VIBRATION_FIRST:
+                mVibrator.vibrate(VIBRATION_PATTERN_FIRST, -1);
                 break;
-            case VIBRATE_GOOD:
-                mVibrator.vibrate(VIBRATION_PATTERN_GOOD, -1);
+            case VIBRATION_SECOND:
+                mVibrator.vibrate(VIBRATION_PATTERN_SECOND, -1);
                 break;
-            case VIBRATE_PERFECT:
-                mVibrator.vibrate(VIBRATION_PATTERN_PERFECT, -1);
+            case VIBRATION_THIRD:
+                mVibrator.vibrate(VIBRATION_PATTERN_THIRD, -1);
                 break;
-            case VIBRATE_START:
-                mVibrator.vibrate(VIBRATION_PATTERN_START, -1);
+            case VIBRATION_FOURTH:
+                mVibrator.vibrate(VIBRATION_PATTERN_FOURTH, -1);
                 break;
             case VIBRATE_END:
                 mVibrator.vibrate(VIBRATION_PATTERN_END, -1);
                 break;
-            case VIBRATE_CONTINUOUS_PATTERN:
-                mVibrator.vibrate(VIBRATION_PATTERN_CONTINUOUS, 0);
-                break;
+
         }
     }
 
