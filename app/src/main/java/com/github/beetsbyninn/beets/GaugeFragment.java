@@ -1,12 +1,15 @@
 package com.github.beetsbyninn.beets;
 
 
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -19,11 +22,13 @@ public class GaugeFragment extends Fragment {
      * Constant used for setting max bar value.
      */
     private final int maxBarValue=100;
-
+    private int temp;
     private MainActivity mainActivty;
     private int barValue;
     private TextView tvBar;
     private Button mBtnPlay;
+    private boolean isPlaying = false;
+    private  ProgressBar progressBar;
 
     public GaugeFragment() {
         // Required empty public constructor
@@ -40,7 +45,7 @@ public class GaugeFragment extends Fragment {
         mBtnPlay = (Button)view.findViewById(R.id.btnPlay);
         mBtnPlay.setOnClickListener(new ButtonPlayListener());
 
-
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         return view;
     }
 
@@ -49,10 +54,12 @@ public class GaugeFragment extends Fragment {
      * @param score
      */
     public void updateScore(double score) {
-        if(barValue<=maxBarValue&&barValue>=0){
-            barValue+=score;
-            tvBar.setText(""+barValue+"/"+maxBarValue);
-        }
+        ObjectAnimator animation = ObjectAnimator.ofInt (progressBar, "progress", temp, (int)score);
+        animation.setDuration (1000); //in milliseconds
+        animation.setInterpolator (new DecelerateInterpolator());
+        animation.start ();
+        tvBar.setText(""+score+"/"+maxBarValue);
+        temp = (int) score;
 
     }
 
@@ -60,6 +67,13 @@ public class GaugeFragment extends Fragment {
         @Override
         public void onClick(View view) {
             mainActivty.initalizaise();
+            if(!isPlaying) {
+                mBtnPlay.setBackgroundResource(R.drawable.stopbtn);
+                isPlaying = true;
+            }else{
+                mBtnPlay.setBackgroundResource(R.drawable.playbtn);
+                isPlaying = false;
+            }
         }
     }
 
