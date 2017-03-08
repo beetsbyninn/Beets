@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="#323232"
-    tools:context="com.github.beetsbyninn.beets.OnStartActivity">
+    tools:context="com.github.beetsbyninn.beets.OnStartActivty">
 
     <TextView
         android:text="@string/logo"
