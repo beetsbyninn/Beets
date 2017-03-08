@@ -10,15 +10,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Information"
-        android:textSize="14dp"
+        android:text="0"
+        android:textSize="22dp"
         android:id="@+id/tvBar"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="78dp"
-        android:textColor="#929292"
+        android:textColor="#FF6F00"
+        android:textAlignment="center"
+        android:layout_alignTop="@+id/progressBar"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:layout_marginTop="89dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
