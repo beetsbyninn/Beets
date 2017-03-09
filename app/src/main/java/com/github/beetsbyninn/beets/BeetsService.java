@@ -93,6 +93,7 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
             if (!mWakeLock.isHeld()) {
                 mWakeLock.acquire();
             }
+
         }else if(mLuxValueFromSensor > 0f){
             //Toast.makeText(getApplicationContext(), "Proximity off", Toast.LENGTH_LONG).show();
             if (mWakeLock != null && mWakeLock.isHeld()) {
