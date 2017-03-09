@@ -90,41 +90,11 @@ public class InfoActivity extends AppCompatActivity {
         private class ButtonListener implements OnClickListener {
             @Override
             public void onClick(View v) {
-                Log.d("TAG","TAG");
                 Intent i = new Intent(InfoActivity.this,MainActivity.class);
                 InfoActivity.this.startActivity(i);
             }
         }
     }
 }
-        /*
-        @Override
-        public Object instantiateItem(ViewGroup collection, int position) {
-            InfoObject infoObject = InfoObject.values()[position];
-            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-            ViewGroup layout = (ViewGroup) inflater.inflate(infoObject.getLayoutId(), collection, false);
-            collection.addView(layout);
-            return layout;
-        }
 
-        @Override
-        public void destroyItem(ViewGroup collection, int position, Object view) {
-            collection.removeView((View) view);
-        }
-
-        @Override
-        public int getCount() {
-            return InfoObject.values().length;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-
-    }
-
-
-    */
 
