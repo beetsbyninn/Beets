@@ -2,52 +2,63 @@ package com.github.beetsbyninn.beets;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
-
-    private MyAdapter mAdapter;
-    private ViewPager mPager;
+public class InfoActivity extends AppCompatActivity {
+    private Button btnDoneWitnTutorial;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-        mAdapter = new MyAdapter(getSupportFragmentManager());
 
-        mPager = (ViewPager) findViewById(R.id.photos_viewpager);
-        mPager.setAdapter(mAdapter);
 
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mViewPager.setAdapter(new MyAdapter());
+
+        TabLayout tabLayout = (TabLayout)findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(mViewPager, true);
 
     }
 
-    public static class MyAdapter extends FragmentPagerAdapter {
-        public MyAdapter(FragmentManager fm) {
-            super(fm);
+    private class MyAdapter extends PagerAdapter{
+        @Override
+        public Object instantiateItem(ViewGroup collection, int position) {
+            InfoObject infoObject = InfoObject.values()[position];
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            ViewGroup layout = (ViewGroup) inflater.inflate(infoObject.getLayoutId(), collection, false);
+            collection.addView(layout);
+            return layout;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return InfoObject.values().length;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new DetailFragment();
-                case 1:
-                    return new PlayFragment();
-                case 2:
-                    return new DetailFragment();
-
-                default:
-                    return null;
-            }
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
         }
+
+
     }
+
+    public void myFancyMethod(View v) {
+        Log.d("TAG","HEJ");
+    }
+
 }
