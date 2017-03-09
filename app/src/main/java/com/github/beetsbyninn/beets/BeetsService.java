@@ -1,10 +1,13 @@
 package com.github.beetsbyninn.beets;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +15,9 @@ import java.util.ArrayList;
 /**
  * The service listens for events from the sensor handler.
  */
-public class BeetsService extends Service implements StepDetectorListener {
+public class BeetsService extends Service implements StepDetectorListener, ProximityScreenDetector {
     private static final String TAG = "BeetsService";
-    private SensorHandler sensorHandler = new SensorHandler(this,this);
+    private SensorHandler sensorHandler = new SensorHandler(this,this,this);
     private LocalBinder mBinder = new LocalBinder();
     private MusicPlayer mMusicPlayer;
     private ArrayList timeStamps = new ArrayList();
@@ -76,6 +79,26 @@ public class BeetsService extends Service implements StepDetectorListener {
     private void stepTaken() {
         long currentTime = System.currentTimeMillis();
         mThreshold.postTimeStamp(currentTime);
+    }
+
+    @Override
+    public void onCoverDetected(float mLuxValueFromSensor) {
+        PowerManager.WakeLock mWakeLock = null;
+        PowerManager mPowerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        if(mLuxValueFromSensor == 0f) {
+            //Toast.makeText(getApplicationContext(), "Proximity on", Toast.LENGTH_LONG).show();
+            if (mWakeLock == null) {
+                mWakeLock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "incall");
+            }
+            if (!mWakeLock.isHeld()) {
+                mWakeLock.acquire();
+            }
+        }else if(mLuxValueFromSensor > 0f){
+            //Toast.makeText(getApplicationContext(), "Proximity off", Toast.LENGTH_LONG).show();
+            if (mWakeLock != null && mWakeLock.isHeld()) {
+                mWakeLock.release();
+            }
+        }
     }
 
 
