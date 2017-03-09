@@ -17,18 +17,20 @@ public class SensorHandler implements SensorEventListener {
     private static final String TAG = "SensorHandler";
     private SensorManager mSensorManager;
     private Context mContext;
-    private Sensor mStepDetector;
+    private Sensor mStepDetector, mProximitySensor;
     private boolean mSensorFlag;
     private StepDetectorListener mListener;
     private long lastStepTimeStamp;
+    private ProximityScreenDetector mProximityDetector;
 
     /**
      * Sets a context reference.
      * @param c
      */
-    public SensorHandler(Context c, StepDetectorListener listener) {
+    public SensorHandler(Context c, StepDetectorListener listener, ProximityScreenDetector coverDetector) {
         mContext = c;
         mListener = listener;
+        mProximityDetector = coverDetector;
     }
 
     /**
@@ -44,8 +46,14 @@ public class SensorHandler implements SensorEventListener {
     private void initSensor() {
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mStepDetector = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         if (mStepDetector == null) {
-            Toast.makeText(mContext, "Step detector not available", Toast.LENGTH_SHORT).show();
+            mSensorFlag = false;
+        } else {
+            mSensorFlag = true;
+        }
+
+        if (mProximitySensor == null) {
             mSensorFlag = false;
         } else {
             mSensorFlag = true;
@@ -59,10 +67,16 @@ public class SensorHandler implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if ((sensorEvent.timestamp - lastStepTimeStamp) > 30000000L) {
-            mListener.onStepDetected();
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_STEP_DETECTOR){
+            if ((sensorEvent.timestamp - lastStepTimeStamp) > 30000000L) {
+                mListener.onStepDetected();
+            }
+            lastStepTimeStamp = sensorEvent.timestamp;
         }
-        lastStepTimeStamp = sensorEvent.timestamp;
+
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY){
+            mProximityDetector.onCoverDetected(sensorEvent.values[0]);
+        }
     }
 
     /**
@@ -80,6 +94,7 @@ public class SensorHandler implements SensorEventListener {
      */
     public void registerListener() {
         mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mProximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
