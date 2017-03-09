@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".OnStartActivty">
+        <activity android:name=".InfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,9 +31,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".InfoActivity"
-            android:label="@string/title_activity_info"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".OnStartActivty" ></activity>
     </application>
 
 </manifest>

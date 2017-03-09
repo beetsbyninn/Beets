@@ -56,7 +56,7 @@ public class InfoActivity extends AppCompatActivity {
 
                 case 1:
                     view = inflater.inflate(R.layout.last_welcome_slide,null);
-                    TextView tv = (Button) view.findViewById(R.id.btnDoneTutorial);
+                    Button tv = (Button) view.findViewById(R.id.btnDoneTutorial);
                     tv.setText("btn");
                     tv.setOnClickListener(new ButtonListener());
                     break;
