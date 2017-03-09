@@ -31,7 +31,6 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-
         ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mViewPager.setAdapter(new MyAdapter());
 
@@ -84,14 +83,14 @@ public class InfoActivity extends AppCompatActivity {
         @Override
         public boolean isViewFromObject(View arg0, Object arg1) {
             return arg0 == ((View) arg1);
-
         }
 
         private class ButtonListener implements OnClickListener {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(InfoActivity.this,MainActivity.class);
+                Intent i = new Intent(getApplicationContext(),MainActivity.class);
                 InfoActivity.this.startActivity(i);
+                finish();
             }
         }
     }
