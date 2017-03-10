@@ -30,6 +30,7 @@ public class GaugeFragment extends Fragment {
     private Button mBtnPlay;
     private boolean isPlaying = false;
     private  ProgressBar progressBar;
+    private  boolean firstime=true;
 
     public GaugeFragment() {
         // Required empty public constructor
@@ -68,11 +69,18 @@ public class GaugeFragment extends Fragment {
     private class ButtonPlayListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+
             mainActivty.initalizaise();
             if(!isPlaying) {
+                if(!firstime){
+                    mainActivty.start();
+                }
+                firstime=false;
                 mBtnPlay.setBackgroundResource(R.drawable.stopbtn);
                 isPlaying = true;
             }else{
+                mainActivty.pause();
+
                 mBtnPlay.setBackgroundResource(R.drawable.playbtn);
                 isPlaying = false;
             }

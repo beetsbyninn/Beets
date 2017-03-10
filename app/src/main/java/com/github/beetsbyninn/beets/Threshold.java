@@ -13,6 +13,7 @@ import java.util.TimerTask;
 public class Threshold {
     private static final String TAG = "Threshold";
 
+    private boolean startOverHundred;
     private int mCurrentMaxScore = 0;
     private double mCurrentScore = 0;
     private long mStartTime;
@@ -21,7 +22,7 @@ public class Threshold {
     private Timer timer;
     private Timer mStepTimer;
     private StepBuffer buffer;
-   // private Worker worker;
+    // private Worker worker;
     private MainActivity mListener;
     private Context mContext;
     private double[] perodicArray;
@@ -73,13 +74,13 @@ public class Threshold {
      * @param good
      * @param mBPM
      */
-    public Threshold(double perfect, double good, int mBPM,int songLength,MainActivity mListener, Context context) {
+    public Threshold(double perfect, double good, int mBPM, int songLength, MainActivity mListener, Context context) {
         this.mBPM = mBPM;
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
         M_GOOD = good;
         buffer = new StepBuffer();
-        this.mListener=mListener;
+        this.mListener = mListener;
         mFeedBackListener = new FeedbackListener() {
 
             @Override
@@ -87,10 +88,11 @@ public class Threshold {
                 Log.d(TAG, "post10Sec: " + score);
             }
         };
+        mListener.setThreshold(this);
         timer = new Timer();
         mContext = context;
         mVibrator = new Vibrate(mContext);
-
+        mListener.setVibrator(mVibrator);
         perodicArray = getRhythmPeriodicy(mBPM, songLength);
         Log.d(TAG, "Threshold: Array" + Arrays.toString(perodicArray));
     }
@@ -98,10 +100,10 @@ public class Threshold {
 
     public double[] getRhythmPeriodicy(double beatsPerMinute, int songLength) {
         intervalLength = 60.0 / beatsPerMinute;
-        int totalBeatsInSong = (int)Math.ceil(songLength / intervalLength);
+        int totalBeatsInSong = (int) Math.ceil(songLength / intervalLength);
         double[] periodicyArray = new double[totalBeatsInSong];
         double currentPeriodicy = 0.0;
-        for(int i = 0; i < totalBeatsInSong; i++) {
+        for (int i = 0; i < totalBeatsInSong; i++) {
             periodicyArray[i] = currentPeriodicy;
             currentPeriodicy += intervalLength;
         }
@@ -125,7 +127,7 @@ public class Threshold {
 //        worker = new Worker();
 //        worker.start();
         mStepTimer = new Timer();
-        mStepTimer.schedule(new StepTimer(), 0, (long)(intervalLength * 1000));
+        mStepTimer.schedule(new StepTimer(), 0, (long) (intervalLength * 1000));
     }
 
     /**
@@ -134,7 +136,7 @@ public class Threshold {
     public void postTimeStamp(long stepTimeStamp) {
         Log.d(TAG, "postTimeStamp: running ");
         try {
-             buffer.add(stepTimeStamp);
+            buffer.add(stepTimeStamp);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -185,16 +187,16 @@ public class Threshold {
 //            mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
             mListener.update(mCurrentScore);
             double temp = mBarValue + mCurrentScore;
-            if (100 >= temp && 0 <= temp){
+            if (100 >= temp && 0 <= temp) {
                 mBarValue += mCurrentScore;
                 mListener.update(mBarValue);
                 Log.d(TAG, "barvalue inc: " + mBarValue);
-            }else{
-                if(temp >= 100){
+            } else {
+                if (temp >= 100) {
                     mBarValue = 100;
                     mListener.update(mBarValue);
                     Log.d(TAG, "barvalue 100: " + mBarValue);
-                }else if( temp <= 0){
+                } else if (temp <= 0) {
                     mBarValue = 0;
                     mListener.update(mBarValue);
                     Log.d(TAG, "barvalue 0: " + mBarValue);
@@ -214,7 +216,7 @@ public class Threshold {
                 mCurrentStep = buffer.remove();
                 double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
                 int currentBeat = getBeatInSong(currentTimeInSong);
-                double differenceNext = (perodicArray[currentBeat + 1]  % intervalLength) * 1000.0;
+//                double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
                 double difference = (currentTimeInSong % intervalLength) * 1000.0;
 //                Log.i(TAG, "timeStamp" + timeStamp);
 //                Log.i(TAG, "currentTimeInSong: " + currentTimeInSong);
@@ -244,60 +246,78 @@ public class Threshold {
         return i;
     }
 
+    public void start(long timePause) {
+        long dif = Math.abs(System.currentTimeMillis()-timePause );
+        if (startOverHundred) {
+            mBarValue = 100;
+
+        }
+        startThreshold(mStartTime + dif);
+        Log.d(TAG, "start: " + mBarValue);
+    }
+
+    public void pause() {
+        if (mBarValue >= 100) {
+            startOverHundred = true;
+        } else {
+            startOverHundred = false;
+        }
+        Log.d(TAG, "pause: " + mBarValue);
+        timer.cancel();
+
+    }
     /**
      * A Thread that is  processing step data from buffer.
 
-    private class Worker extends Thread {
-        private long mLastStepTime = 0;
-        private static final String TAG = "Worker";
-        boolean running;
+     private class Worker extends Thread {
+     private long mLastStepTime = 0;
+     private static final String TAG = "Worker";
+     boolean running;
 
 
-        @Override
-        public void start() {
-            super.start();
-            running = true;
+     @Override public void start() {
+     super.start();
+     running = true;
 
-        }
+     }
 
-        public void cancel() {
-            running = false;
-        }
+     public void cancel() {
+     running = false;
+     }
 
-        @Override
-        public void run() {
-            while (running) {
-                if (mLastStepTime != 0) {
-                    Log.e(TAG, "run: lastStepTime" + mLastStepTime);
-                    try {
-                        mCurrentStep = buffer.remove();
-                        long difference = Math.abs(500 - (mCurrentStep - mLastStepTime));
-                        Log.d(TAG, "currentStep: " + mCurrentStep);
-                        Log.d(TAG, "lastStepTime: " + mLastStepTime);
-                        Log.d(TAG, "difference: " + difference);
-                        if (difference <= M_PERFECT) {
-                            mCurrentScore += 1;
-                            //    mVibrator.vibrate(Vibrate.VIBRATE_PERFECT);
-                            Log.e(TAG, "PERFECT");
-                        } else if (difference <= M_GOOD) {
-                            mCurrentScore += 0.75;
-                            //   mVibrator.vibrate(Vibrate.VIBRATE_GOOD);
-                            Log.e(TAG, "GOOD");
-                        } else {
-                            //  mVibrator.vibrate(Vibrate.VIBRATE_FAIL);
-                            Log.e(TAG, "FAIL");
-                        }
+     @Override public void run() {
+     while (running) {
+     if (mLastStepTime != 0) {
+     Log.e(TAG, "run: lastStepTime" + mLastStepTime);
+     try {
+     mCurrentStep = buffer.remove();
+     long difference = Math.abs(500 - (mCurrentStep - mLastStepTime));
+     Log.d(TAG, "currentStep: " + mCurrentStep);
+     Log.d(TAG, "lastStepTime: " + mLastStepTime);
+     Log.d(TAG, "difference: " + difference);
+     if (difference <= M_PERFECT) {
+     mCurrentScore += 1;
+     //    mVibrator.vibrate(Vibrate.VIBRATE_PERFECT);
+     Log.e(TAG, "PERFECT");
+     } else if (difference <= M_GOOD) {
+     mCurrentScore += 0.75;
+     //   mVibrator.vibrate(Vibrate.VIBRATE_GOOD);
+     Log.e(TAG, "GOOD");
+     } else {
+     //  mVibrator.vibrate(Vibrate.VIBRATE_FAIL);
+     Log.e(TAG, "FAIL");
+     }
 
 
-                        mLastStepTime = mCurrentStep;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    mLastStepTime = System.currentTimeMillis();
-                }
-            }
-        }
-    }
+     mLastStepTime = mCurrentStep;
+     } catch (InterruptedException e) {
+     e.printStackTrace();
+     }
+     } else {
+     mLastStepTime = System.currentTimeMillis();
+     }
+     }
+     }
+     }
      */
 }

@@ -31,6 +31,7 @@ public class SensorHandler implements SensorEventListener {
         mContext = c;
         mListener = listener;
         mProximityDetector = coverDetector;
+        onCreate();
     }
 
     /**
@@ -43,7 +44,7 @@ public class SensorHandler implements SensorEventListener {
     /**
      * Checks if the sensor is available and if the sensors are available the stepdector is initlised.
      */
-    private void initSensor() {
+    public void initSensor() {
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mStepDetector = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);

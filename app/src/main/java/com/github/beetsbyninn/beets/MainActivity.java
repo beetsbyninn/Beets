@@ -22,6 +22,11 @@ import java.io.IOException;
  */
 public class MainActivity extends AppCompatActivity {
 
+
+    private   long timePause;
+    private Threshold threshold;
+    private SensorHandler sensorHandler;
+    private Vibrate mVibrator;
     private static final String TAG = "MainActivity";
     private BeetsService mBeetsService;
     private boolean mBound = false;
@@ -122,7 +127,30 @@ public class MainActivity extends AppCompatActivity {
                 gaugeFragment.updateScore(score);
             }
         });
-
-
     }
+
+    public void pause(){
+         timePause = System.currentTimeMillis();
+        threshold.pause();
+        mVibrator.cancel();
+        sensorHandler.onDestroy();
+        mMusicPlayer.stopSong();
+    }
+    public void start(){
+        threshold.start(timePause);
+        sensorHandler.initSensor();
+        mMusicPlayer.playSong();
+    }
+
+    public void setVibrator(Vibrate mVibrator) {
+        this.mVibrator = mVibrator;
+    }
+
+    public void setSensorHandler(SensorHandler sensorHandler) {
+        this.sensorHandler = sensorHandler;
+    }
+    public void setThreshold(Threshold threshold) {
+        this.threshold = threshold;
+    }
+
 }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class BeetsService extends Service implements StepDetectorListener, ProximityScreenDetector {
     private static final String TAG = "BeetsService";
-    private SensorHandler sensorHandler = new SensorHandler(this,this,this);
+    private SensorHandler sensorHandler;
     private LocalBinder mBinder = new LocalBinder();
     private MusicPlayer mMusicPlayer;
     private ArrayList timeStamps = new ArrayList();
@@ -46,19 +46,23 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
         sensorHandler.registerListener();
         mThreshold = new Threshold(50.0, 125.0, 128, 184, mListener,this);
         mThreshold.startThreshold(startTime);
+
     }
 
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sensorHandler.onCreate();
+
+        sensorHandler = new SensorHandler(this,this,this);
+
         mMusicPlayer = new MusicPlayer(this);
         try {
             mMusicPlayer.initStepMediaPlayer();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -118,5 +122,6 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
      */
     public void setListenerActivity(MainActivity listener) {
         mListener = listener;
+        mListener.setSensorHandler(sensorHandler);
     }
 }
