@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 
 /**
+ *
+ * Author Ludwig Ninn
  * A simple {@link Fragment} subclass.
  */
 public class GaugeFragment extends Fragment {
@@ -25,14 +27,14 @@ public class GaugeFragment extends Fragment {
     private final int maxBarValue=100;
     private int temp;
     private MainActivity mainActivty;
-    private int barValue;
     private TextView tvBar;
     private Button mBtnPlay;
     private boolean isPlaying = false;
     private  ProgressBar progressBar;
     private  boolean firstime=true;
 
-    public GaugeFragment() {
+    public GaugeFragment()
+    {
         // Required empty public constructor
     }
 
@@ -54,6 +56,7 @@ public class GaugeFragment extends Fragment {
 
     /**
      * Sets the bar value.
+     * Author Ludwig Ninn
      * @param score
      */
     public void updateScore(double score) {
@@ -66,25 +69,37 @@ public class GaugeFragment extends Fragment {
 
     }
 
+    /**
+     * Button Listener. Have a pause and a start function.
+     * Author Ludwig Ninn
+     */
     private class ButtonPlayListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
 
-            mainActivty.initalizaise();
-            if(!isPlaying) {
-                if(!firstime){
-                    mainActivty.start();
-                }
-                firstime=false;
-                mBtnPlay.setBackgroundResource(R.drawable.stopbtn);
-                isPlaying = true;
-            }else{
-                mainActivty.pause();
-
-                mBtnPlay.setBackgroundResource(R.drawable.playbtn);
-                isPlaying = false;
-            }
+            checkStartPause();
         }
     }
+
+    public void checkStartPause(){
+
+        if(!isPlaying) {
+            if(!firstime){
+                mainActivty.start();
+            }else{
+                mainActivty.initalizaise();
+            }
+
+            firstime=false;
+            mBtnPlay.setBackgroundResource(R.drawable.stopbtn);
+            isPlaying = true;
+        }else{
+            mainActivty.pause();
+
+            mBtnPlay.setBackgroundResource(R.drawable.playbtn);
+            isPlaying = false;
+        }
+    }
+
 
 }

@@ -87,22 +87,28 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
 
     @Override
     public void onCoverDetected(float mLuxValueFromSensor) {
+
         PowerManager.WakeLock mWakeLock = null;
         PowerManager mPowerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
         if(mLuxValueFromSensor == 0f) {
-            //Toast.makeText(getApplicationContext(), "Proximity on", Toast.LENGTH_LONG).show();
+
+           // Toast.makeText(getApplicationContext(), "Proximity on", Toast.LENGTH_LONG).show();
             if (mWakeLock == null) {
                 mWakeLock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "incall");
             }
             if (!mWakeLock.isHeld()) {
                 mWakeLock.acquire();
-            }
 
+
+            }
         }else if(mLuxValueFromSensor > 0f){
-            //Toast.makeText(getApplicationContext(), "Proximity off", Toast.LENGTH_LONG).show();
+           //Toast.makeText(getApplicationContext(), "Proximity off", Toast.LENGTH_LONG).show();
             if (mWakeLock != null && mWakeLock.isHeld()) {
                 mWakeLock.release();
+
+
             }
+
         }
     }
 

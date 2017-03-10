@@ -120,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
+    /**
+     * Updates score with runOnUiThread.
+     * Author Ludwig Ninn
+     * @param score
+     */
     public void update(final double score){
         runOnUiThread(new Runnable() {
             @Override
@@ -129,16 +134,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Pauses the following:
+     * Threshold
+     * vibrator
+     * SensorHandler
+     * MusicPlayer
+     * Also take a timestamp when the pause is started.
+     * Author Ludwig Ninn
+     */
     public void pause(){
          timePause = System.currentTimeMillis();
         threshold.pause();
         mVibrator.cancel();
-        sensorHandler.onDestroy();
+        sensorHandler.pause(false);
         mMusicPlayer.stopSong();
     }
+
+    /**
+     * Starts the following:
+     * Threshold
+     * MusicPlayer
+     * Also takes the timePuase from the pause method and sends it to threshold to calculate the amount of time that was paused.
+     * Author Ludwig Ninn
+     */
     public void start(){
         threshold.start(timePause);
-        sensorHandler.initSensor();
+        sensorHandler.pause(true);
         mMusicPlayer.playSong();
     }
 
@@ -151,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void setThreshold(Threshold threshold) {
         this.threshold = threshold;
+    }
+    public void checkStartPause(){
+        gaugeFragment.checkStartPause();
     }
 
 }

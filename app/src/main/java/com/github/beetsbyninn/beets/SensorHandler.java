@@ -19,6 +19,7 @@ public class SensorHandler implements SensorEventListener {
     private Context mContext;
     private Sensor mStepDetector, mProximitySensor;
     private boolean mSensorFlag;
+    private boolean pause=true;
     private StepDetectorListener mListener;
     private long lastStepTimeStamp;
     private ProximityScreenDetector mProximityDetector;
@@ -68,15 +69,17 @@ public class SensorHandler implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if(sensorEvent.sensor.getType() == Sensor.TYPE_STEP_DETECTOR){
-            if ((sensorEvent.timestamp - lastStepTimeStamp) > 30000000L) {
-                mListener.onStepDetected();
+        if(pause) {
+            if (sensorEvent.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+                if ((sensorEvent.timestamp - lastStepTimeStamp) > 30000000L) {
+                    mListener.onStepDetected();
+                }
+                lastStepTimeStamp = sensorEvent.timestamp;
             }
-            lastStepTimeStamp = sensorEvent.timestamp;
-        }
 
-        if(sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY){
-            mProximityDetector.onCoverDetected(sensorEvent.values[0]);
+            if (sensorEvent.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                mProximityDetector.onCoverDetected(sensorEvent.values[0]);
+            }
         }
     }
 
@@ -104,5 +107,9 @@ public class SensorHandler implements SensorEventListener {
      */
     public void onDestroy() {
         mSensorManager.unregisterListener(this);
+    }
+
+    public void pause(boolean set){
+        pause=set;
     }
 }
