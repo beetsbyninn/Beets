@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class Threshold {
     private static final String TAG = "Threshold";
 
-    private boolean startOverHundred;
+    private boolean startCheck;
     private int mCurrentMaxScore = 0;
     private double mCurrentScore = 0;
     private long mStartTime;
@@ -52,7 +52,7 @@ public class Threshold {
     /**
      * The constructor sets up the threshold with two constants. The constants are used for calculating
      * score.
-     *
+     * Author Alexander & Patrik
      * @param perfect           Maximum time for a step should be counting as perfect.
      * @param good              Maximum time for a step should be counting as perfect.
      * @param mBPM
@@ -69,7 +69,7 @@ public class Threshold {
 
     /**
      * Constructor is only used for testing.
-     *
+     * Author Alexander & Patrik
      * @param perfect
      * @param good
      * @param mBPM
@@ -89,7 +89,7 @@ public class Threshold {
             }
         };
         mListener.setThreshold(this);
-        timer = new Timer();
+
         mContext = context;
         mVibrator = new Vibrate(mContext);
         mListener.setVibrator(mVibrator);
@@ -97,7 +97,13 @@ public class Threshold {
         Log.d(TAG, "Threshold: Array" + Arrays.toString(perodicArray));
     }
 
-
+    /**
+     *  DUNNO?
+     *  Author Alexander & Patrik
+     * @param beatsPerMinute
+     * @param songLength
+     * @return
+     */
     public double[] getRhythmPeriodicy(double beatsPerMinute, int songLength) {
         intervalLength = 60.0 / beatsPerMinute;
         int totalBeatsInSong = (int) Math.ceil(songLength / intervalLength);
@@ -116,10 +122,11 @@ public class Threshold {
 
     /**
      * Starts the socre counting
-     *
+     *  Author Alexander, Patrik & Ludwig
      * @param startTime A long with a timestamp.
      */
     public void startThreshold(long startTime) {
+        timer = new Timer();
         mStartTime = startTime;
         timer.schedule(new FeedBackTimer(), 0, 10000);
         timer.schedule(new DecresePoints(), 0, 5000);
@@ -132,6 +139,7 @@ public class Threshold {
 
     /**
      * @param stepTimeStamp§
+     *  Author Alexander & Patrik
      */
     public void postTimeStamp(long stepTimeStamp) {
         Log.d(TAG, "postTimeStamp: running ");
@@ -142,6 +150,10 @@ public class Threshold {
         }
     }
 
+    /**
+     * Decrese points if a second has passed if the score is less then the set threshold a vibration will start. The vibration is stronger depending on how low the score.
+     * Author Ludwig Ninn
+     */
     private class DecresePoints extends TimerTask {
 
         /**
@@ -152,9 +164,12 @@ public class Threshold {
             Log.d(TAG, "DecresePoints " + mBarValue);
 
             long difference = Math.abs(mCurrentStep - mLastStep);
-            if (1000 >= difference) {
+                if (1000 >= difference) {
                 mExpoCount++;
-                mBarValue -= 1.25 * mExpoCount;
+                    if(!startCheck){
+                        mBarValue -= 1.25 * mExpoCount;
+                    }
+
                 if (mBarValue < VIBRATE_FIRST_FAIL && mBarValue > VIBRATE_SECOND_FAIL) {
                     mVibrator.vibrate(Vibrate.VIBRATION_FIRST);
                     Log.d(TAG, "Value1: " + mBarValue);
@@ -174,17 +189,20 @@ public class Threshold {
             } else {
                 mExpoCount = 0;
             }
-
+            startCheck= false;
             mLastStep = mCurrentStep;
 
         }
     }
 
+    /**
+     * Update score. If the score is above 100 or below 0 the score is updated to a fixed amount 100 or 0.
+     * Author Ludwig Ninn
+     */
     private class FeedBackTimer extends TimerTask {
 
         @Override
         public void run() {
-//            mFeedBackListener.post10Sec(mCurrentScore / mBeatsInInterval);
             mListener.update(mCurrentScore);
             double temp = mBarValue + mCurrentScore;
             if (100 >= temp && 0 <= temp) {
@@ -208,6 +226,10 @@ public class Threshold {
         }
     }
 
+    /**
+     * Calculates if the step was on the correct intervall as the beat
+     * Author Alexander & Patrik
+     */
     private class StepTimer extends TimerTask {
 
         @Override
@@ -239,85 +261,38 @@ public class Threshold {
         }
     }
 
+    /**
+     * Calculates the current interval length.
+     * Author Alexander & Patrik
+     *
+     * @param stepTime
+     * @return
+     */
     private int getBeatInSong(double stepTime) {
         int i = (int) (stepTime / intervalLength);
         Log.d(TAG, "getBeatInSong: " + i);
-
         return i;
     }
 
+    /**
+     * Calaculates the time that was paused and start the timers again.
+     * Author Ludwig Ninn
+     *
+     * @param timePause
+     */
     public void start(long timePause) {
-        long dif = Math.abs(System.currentTimeMillis()-timePause );
-        if (startOverHundred) {
-            mBarValue = 100;
-
-        }
+        long dif = Math.abs(System.currentTimeMillis() - timePause);
         startThreshold(mStartTime + dif);
         Log.d(TAG, "start: " + mBarValue);
     }
 
+    /**
+     * Cancels the timer. Used in the pause function.
+     */
     public void pause() {
-        if (mBarValue >= 100) {
-            startOverHundred = true;
-        } else {
-            startOverHundred = false;
-        }
+        startCheck=true;
         Log.d(TAG, "pause: " + mBarValue);
         timer.cancel();
-
     }
-    /**
-     * A Thread that is  processing step data from buffer.
 
-     private class Worker extends Thread {
-     private long mLastStepTime = 0;
-     private static final String TAG = "Worker";
-     boolean running;
-
-
-     @Override public void start() {
-     super.start();
-     running = true;
-
-     }
-
-     public void cancel() {
-     running = false;
-     }
-
-     @Override public void run() {
-     while (running) {
-     if (mLastStepTime != 0) {
-     Log.e(TAG, "run: lastStepTime" + mLastStepTime);
-     try {
-     mCurrentStep = buffer.remove();
-     long difference = Math.abs(500 - (mCurrentStep - mLastStepTime));
-     Log.d(TAG, "currentStep: " + mCurrentStep);
-     Log.d(TAG, "lastStepTime: " + mLastStepTime);
-     Log.d(TAG, "difference: " + difference);
-     if (difference <= M_PERFECT) {
-     mCurrentScore += 1;
-     //    mVibrator.vibrate(Vibrate.VIBRATE_PERFECT);
-     Log.e(TAG, "PERFECT");
-     } else if (difference <= M_GOOD) {
-     mCurrentScore += 0.75;
-     //   mVibrator.vibrate(Vibrate.VIBRATE_GOOD);
-     Log.e(TAG, "GOOD");
-     } else {
-     //  mVibrator.vibrate(Vibrate.VIBRATE_FAIL);
-     Log.e(TAG, "FAIL");
-     }
-
-
-     mLastStepTime = mCurrentStep;
-     } catch (InterruptedException e) {
-     e.printStackTrace();
-     }
-     } else {
-     mLastStepTime = System.currentTimeMillis();
-     }
-     }
-     }
-     }
-     */
 }
