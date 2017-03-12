@@ -35,7 +35,7 @@ public class OnStartActivty extends AppCompatActivity {
                 } finally {
                     if(mSharedPreferences.getBoolean("isFirstStart",true)){
                         mSharedPreferences.edit().putBoolean("isFirstStart",false).commit();
-                        Intent slideActivity = new Intent(OnStartActivty.this, InfoActivity.class);
+                        Intent slideActivity = new Intent(OnStartActivty.this, TutorialActivity.class);
                         startActivity(slideActivity);
                         finish();
                     }else{

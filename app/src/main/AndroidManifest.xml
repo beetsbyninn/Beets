@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".InfoActivity">
+        <activity android:name=".OnStartActivty">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +33,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".OnStartActivty" ></activity>
+            android:name=".TutorialActivity" ></activity>
     </application>
 
 </manifest>

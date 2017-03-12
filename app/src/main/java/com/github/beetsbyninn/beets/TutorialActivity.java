@@ -3,28 +3,18 @@ package com.github.beetsbyninn.beets;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 
-public class InfoActivity extends AppCompatActivity {
+public class TutorialActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +90,7 @@ public class InfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),MainActivity.class);
-                InfoActivity.this.startActivity(i);
+                TutorialActivity.this.startActivity(i);
                 finish();
             }
         }
