@@ -1,43 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:background="#323232"
-    android:id="@+id/lastSlide"
     android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/btnDoneTutorial"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="33dp"
-        android:text="Ready" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="112dp"
-        android:text="@string/fourthSlideText"
+        android:text="@string/thirdSlideText"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_alignBottom="@+id/btnDoneTutorial"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginBottom="11dp"
-        app:srcCompat="@drawable/vibration"
-        android:layout_above="@+id/textView"
+        app:srcCompat="@drawable/soundwavve"
+        android:layout_marginTop="163dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

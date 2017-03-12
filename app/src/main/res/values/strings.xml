@@ -6,4 +6,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="red">red</string>
     <string name="blue">blue</string>
+    <string name="firstSlideText">To start the game, press the play button to start the song</string>
+    <string name="secondSlideText">Put down your phone in your pocket and start walking</string>
+    <string name="thirdSlideText">Follow the beat in the song to score points</string>
+    <string name="fourthSlideText">The phone vibrates to give you feedback on how good you are doing</string>
 </resources>

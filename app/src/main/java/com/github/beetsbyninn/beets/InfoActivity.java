@@ -41,7 +41,7 @@ public class InfoActivity extends AppCompatActivity {
 
     private class MyAdapter extends PagerAdapter {
         public int getCount() {
-            return 2;
+            return 4;
         }
 
         @Override
@@ -53,12 +53,16 @@ public class InfoActivity extends AppCompatActivity {
                 case 0:
                     view = inflater.inflate(R.layout.first_welcome_slide,null);
                     break;
-
                 case 1:
+                    view = inflater.inflate(R.layout.second_welcome_slide,null);
+                    break;
+                case 2:
+                    view = inflater.inflate(R.layout.third_welcome_slide,null);
+                    break;
+                case 3:
                     view = inflater.inflate(R.layout.last_welcome_slide,null);
-                    Button tv = (Button) view.findViewById(R.id.btnDoneTutorial);
-                    tv.setText("btn");
-                    tv.setOnClickListener(new ButtonListener());
+                    Button readyBtn = (Button) view.findViewById(R.id.btnDoneTutorial);
+                    readyBtn.setOnClickListener(new ButtonListener());
                     break;
             }
             ((ViewPager) container).addView(view, 0);
@@ -73,7 +77,14 @@ public class InfoActivity extends AppCompatActivity {
             ((ViewPager) arg0).removeView((View) arg2);
         }
 
+        */
 
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View)object);
+        }
+
+        /*
         @Override
         public Parcelable saveState() {
             return null;
