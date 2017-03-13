@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         mMusicPlayer = new MusicPlayer(this);
         mMusicPlayer.initSongMediaPlayer();
-         gaugeFragment = new GaugeFragment();
+        gaugeFragment = new GaugeFragment();
         setFragment(gaugeFragment, false);
     }
 
