@@ -56,7 +56,7 @@ public class GaugeFragment extends Fragment {
 
     /**
      * Sets the bar value.
-     * Author Ludwig Ninn
+     * Author Ludvig Ninn
      * @param score
      */
     public void updateScore(double score) {
@@ -71,7 +71,7 @@ public class GaugeFragment extends Fragment {
 
     /**
      * Button Listener. Have a pause and a start function.
-     * Author Ludwig Ninn
+     * Author Ludvig Ninn
      */
     private class ButtonPlayListener implements View.OnClickListener {
         @Override

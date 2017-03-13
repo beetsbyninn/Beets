@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private BeetsServiceConnection mServiceConnection;
     private GaugeFragment gaugeFragment;
 
+
+
     private MusicPlayer mMusicPlayer;
     private boolean mIsplaying = false;
 
