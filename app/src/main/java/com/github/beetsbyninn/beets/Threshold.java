@@ -37,6 +37,8 @@ public class Threshold {
     public static final double VIBRATE_THIRD_FAIL = 20;
     public static final double VIBRATE_FOURTH_FAIL = 10;
     public static final double VIBRATE_FIFTH_FAIL = 0;
+
+    private boolean mWarmup = false;
     /**
      * Constant used for measuring time when step should count as perfect.
      */
@@ -53,6 +55,7 @@ public class Threshold {
      * The constructor sets up the threshold with two constants. The constants are used for calculating
      * score.
      * Author Alexander & Patrik
+     *
      * @param perfect           Maximum time for a step should be counting as perfect.
      * @param good              Maximum time for a step should be counting as perfect.
      * @param mBPM
@@ -70,6 +73,7 @@ public class Threshold {
     /**
      * Constructor is only used for testing.
      * Author Alexander & Patrik
+     *
      * @param perfect
      * @param good
      * @param mBPM
@@ -98,8 +102,9 @@ public class Threshold {
     }
 
     /**
-     *  DUNNO?
-     *  Author Alexander & Patrik
+     * DUNNO?
+     * Author Alexander & Patrik
+     *
      * @param beatsPerMinute
      * @param songLength
      * @return
@@ -122,7 +127,8 @@ public class Threshold {
 
     /**
      * Starts the socre counting
-     *  Author Alexander, Patrik & Ludwig
+     * Author Alexander, Patrik & Ludwig
+     *
      * @param startTime A long with a timestamp.
      */
     public void startThreshold(long startTime) {
@@ -135,11 +141,11 @@ public class Threshold {
 //        worker.start();
         mStepTimer = new Timer();
         mStepTimer.schedule(new StepTimer(), 0, (long) (intervalLength * 1000));
+        toggleWarmup();
     }
 
     /**
-     * @param stepTimeStamp§
-     *  Author Alexander & Patrik
+     * @param stepTimeStamp§ Author Alexander & Patrik
      */
     public void postTimeStamp(long stepTimeStamp) {
         Log.d(TAG, "postTimeStamp: running ");
@@ -163,35 +169,38 @@ public class Threshold {
         public void run() {
             Log.d(TAG, "DecresePoints " + mBarValue);
 
-            long difference = Math.abs(mCurrentStep - mLastStep);
+            if (!mWarmup) {
+                long difference = Math.abs(mCurrentStep - mLastStep);
                 if (1000 >= difference) {
-                mExpoCount++;
-                    if(!startCheck){
+                    mExpoCount++;
+                    if (!startCheck) {
                         mBarValue -= 1.25 * mExpoCount;
                     }
 
-                if (mBarValue < VIBRATE_FIRST_FAIL && mBarValue > VIBRATE_SECOND_FAIL) {
-                    mVibrator.vibrate(Vibrate.VIBRATION_FIRST);
-                    Log.d(TAG, "Value1: " + mBarValue);
-                } else if (mBarValue < VIBRATE_SECOND_FAIL && mBarValue > VIBRATE_THIRD_FAIL) {
-                    Log.d(TAG, "Value2: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATION_SECOND);
-                } else if (mBarValue < VIBRATE_THIRD_FAIL && mBarValue > VIBRATE_FOURTH_FAIL) {
-                    Log.d(TAG, "Value3: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATION_THIRD);
-                } else if (mBarValue < VIBRATE_FOURTH_FAIL && mBarValue > VIBRATE_FIFTH_FAIL) {
-                    Log.d(TAG, "Value4: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATION_FOURTH);
-                } else if (mBarValue < VIBRATE_FIFTH_FAIL) {
-                    Log.d(TAG, "Value5: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATE_END);
+                    if (mBarValue < VIBRATE_FIRST_FAIL && mBarValue > VIBRATE_SECOND_FAIL) {
+                        mVibrator.vibrate(Vibrate.VIBRATION_FIRST);
+                        Log.d(TAG, "Value1: " + mBarValue);
+                    } else if (mBarValue < VIBRATE_SECOND_FAIL && mBarValue > VIBRATE_THIRD_FAIL) {
+                        Log.d(TAG, "Value2: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATION_SECOND);
+                    } else if (mBarValue < VIBRATE_THIRD_FAIL && mBarValue > VIBRATE_FOURTH_FAIL) {
+                        Log.d(TAG, "Value3: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATION_THIRD);
+                    } else if (mBarValue < VIBRATE_FOURTH_FAIL && mBarValue > VIBRATE_FIFTH_FAIL) {
+                        Log.d(TAG, "Value4: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATION_FOURTH);
+                    } else if (mBarValue < VIBRATE_FIFTH_FAIL) {
+                        Log.d(TAG, "Value5: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATE_END);
+                    }
+                } else {
+                    mExpoCount = 0;
                 }
             } else {
-                mExpoCount = 0;
+                toggleWarmup(); // Warmup should be set to false after first time
             }
-            startCheck= false;
+            startCheck = false;
             mLastStep = mCurrentStep;
-
         }
     }
 
@@ -245,14 +254,16 @@ public class Threshold {
 //                Log.i(TAG, "diff " + difference);
 //                Log.i(TAG, "nextdiff: " + differenceNext);
                 Log.i(TAG, "run: " + difference);
-                if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
-                    mCurrentScore += 1;
-                    Log.e(TAG, "PERFECT");
-                } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
-                    mCurrentScore += 0.75;
-                    Log.e(TAG, "GOOD");
-                } else {
-                    Log.e(TAG, "FAIL");
+                if (!mWarmup) {
+                    if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
+                        mCurrentScore += 1;
+                        Log.e(TAG, "PERFECT");
+                    } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
+                        mCurrentScore += 0.75;
+                        Log.e(TAG, "GOOD");
+                    } else {
+                        Log.e(TAG, "FAIL");
+                    }
                 }
 
             } catch (InterruptedException e) {
@@ -290,9 +301,15 @@ public class Threshold {
      * Cancels the timer. Used in the pause function.
      */
     public void pause() {
-        startCheck=true;
+        startCheck = true;
         Log.d(TAG, "pause: " + mBarValue);
         timer.cancel();
     }
 
+    /**
+     * Toggles the warmup flag.
+     */
+    public void toggleWarmup() {
+        mWarmup = !mWarmup;
+    }
 }
