@@ -19,6 +19,7 @@ public class ScoreFragment extends Fragment {
 
     private TextView tvSong, tvScore;
     private ImageView ivThrophy;
+    private Score score;
 
     public ScoreFragment() {
         // Required empty public constructor
@@ -40,7 +41,8 @@ public class ScoreFragment extends Fragment {
 
     public void getScore () {
         StatsDB dbHandler = new StatsDB(getActivity());
-        Score score = dbHandler.getScore("dance-with-me");
+       // Score score = dbHandler.getScore("dancewithme");
+        //TODO lägg till score objektet i DB för att sedan visa alla highscores.
 
         if (score != null) {
             tvSong.setText(String.valueOf(score.getSong()));
@@ -53,7 +55,7 @@ public class ScoreFragment extends Fragment {
             }else if(score.getStat()>=90 ){
                 ivThrophy.setImageResource(R.drawable.goldtrophy);
             }
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, score.getStat());
             valueAnimator.setDuration(2000);
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -69,4 +71,7 @@ public class ScoreFragment extends Fragment {
     }
 
 
+    public void setScore(Score score) {
+        this.score = score;
+    }
 }

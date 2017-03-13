@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Jonte on 13-Mar-17.
@@ -49,16 +50,18 @@ public class StatsDB extends SQLiteOpenHelper {
     }
 
     public Score getScore(String songName){
-        String query = "SELECT * FROM " + TABLE_STATS + " WHERE " + KEY_SONG + " = " + songName;
+        String query = "SELECT * FROM " + TABLE_STATS; //+ " WHERE " + KEY_SONG + "=" + songName;
          SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("db","innehåll: " + query);
         Cursor cursor = db.rawQuery(query,null);
+        Score score;
 
-        Score score = new Score();
 
         if(cursor.moveToFirst()){
             cursor.moveToFirst();
-            score.setStat(cursor.getInt(1));
-            score.setSong(cursor.getString(2));
+            score = new Score(cursor.getInt(1),cursor.getString(2));
+            Log.d("score added",score.getStat() +" "  + score.getSong());
+
         }else{
             score = null;
         }

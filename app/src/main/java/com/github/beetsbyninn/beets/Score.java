@@ -8,6 +8,11 @@ public class Score {
     private int stat;
     private String song;
 
+    public Score(int stat, String song){
+        this.stat = stat;
+        this.song = song;
+    }
+
     public int getStat() {
         return stat;
     }
