@@ -10,4 +10,7 @@
     <string name="secondSlideText">Put down your phone in your pocket and start walking</string>
     <string name="thirdSlideText">Follow the beat in the song to score points</string>
     <string name="fourthSlideText">The phone vibrates to give you feedback on how good you are doing</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
