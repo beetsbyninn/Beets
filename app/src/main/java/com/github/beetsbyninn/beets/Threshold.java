@@ -20,7 +20,9 @@ public class Threshold {
     private int mBPM;
     private FeedbackListener mFeedBackListener;
     private Timer timer;
+    private Timer mDecSoretimer;
     private Timer mStepTimer;
+    private Timer mFeedbackTimer;
     private StepBuffer buffer;
     // private Worker worker;
     private MainActivity mListener;
@@ -37,7 +39,11 @@ public class Threshold {
     public static final double VIBRATE_THIRD_FAIL = 20;
     public static final double VIBRATE_FOURTH_FAIL = 10;
     public static final double VIBRATE_FIFTH_FAIL = 0;
-
+    private static final int EXCELLENT = 60;
+    private static final int DOMINATTING = 70;
+    private static final int UNSTOPPABLE = 80;
+    private static final int RAMPAGE = 90;
+    private static final int GODLIKE = 100;
     private boolean mWarmup = false;
     /**
      * Constant used for measuring time when step should count as perfect.
@@ -133,13 +139,15 @@ public class Threshold {
      */
     public void startThreshold(long startTime) {
         timer = new Timer();
+        mDecSoretimer = new Timer();
+        mFeedbackTimer = new Timer();
         mStartTime = startTime;
-        timer.schedule(new FeedBackTimer(), 0, 10000);
-        timer.schedule(new DecresePoints(), 0, 5000);
-        Log.d(TAG, "startThreshold: ");
-//        worker = new Worker();
-//        worker.start();
         mStepTimer = new Timer();
+
+
+        timer.schedule(new FeedBackTimer(), 0, 10000);
+        mDecSoretimer.schedule(new DecresePoints(), 0, 5000);
+        mFeedbackTimer.schedule(new CheckScore(), 0, 7000);
         mStepTimer.schedule(new StepTimer(), 0, (long) (intervalLength * 1000));
         toggleWarmup();
     }
@@ -311,5 +319,36 @@ public class Threshold {
      */
     public void toggleWarmup() {
         mWarmup = !mWarmup;
+    }
+
+    private class CheckScore extends TimerTask {
+
+        /**
+         * The action to be performed by this timer task.
+         */
+        @Override
+        public void run() {
+            int score = (int) mBarValue;
+
+            if (score <= EXCELLENT && score >= 50) {
+                Log.d(TAG, "EXCELLENT: " + score);
+                mListener.playFeedback(1);
+            } else if (score <= DOMINATTING && score > EXCELLENT) {
+                mListener.playFeedback(2);
+                Log.d(TAG, "DOMINATTING: " + score);
+            } else if (score <= UNSTOPPABLE && score > DOMINATTING) {
+                Log.d(TAG, "UNSTOPPABLE: " + score);
+                mListener.playFeedback(3);
+            } else if (score <= RAMPAGE && score > UNSTOPPABLE) {
+                Log.d(TAG, "RAMPAGE: " + score);
+                mListener.playFeedback(4);
+            } else if (score <= GODLIKE && score > RAMPAGE) {
+                Log.d(TAG, "GODLIKE: " + score);
+                mListener.playFeedback(5);
+            }else if(score<10){
+                mListener.playFeedback(6);
+            }
+
+        }
     }
 }
