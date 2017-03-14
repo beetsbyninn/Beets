@@ -6,7 +6,7 @@
     <color name="colorDark">#2ecc71</color>
     <color name="defaultDot">#212121</color>
     <color name="selectedDot">#e67e22</color>
-    <color name="colorBad">#FF6F00</color>
-    <color name="colorGood">#FFFF00</color>
+    <color name="colorBad">#ff6f00</color>
+    <color name="colorGood">#ffff00</color>
     <color name="colorPerfect">#00DD00</color>
 </resources>
