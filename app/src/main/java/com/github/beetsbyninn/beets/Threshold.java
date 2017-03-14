@@ -20,7 +20,9 @@ public class Threshold {
     private int mBPM;
     private FeedbackListener mFeedBackListener;
     private Timer timer;
+    private Timer mDecSoretimer;
     private Timer mStepTimer;
+    private Timer mFeedbackTimer;
     private StepBuffer buffer;
     // private Worker worker;
     private MainActivity mListener;
@@ -37,6 +39,12 @@ public class Threshold {
     public static final double VIBRATE_THIRD_FAIL = 20;
     public static final double VIBRATE_FOURTH_FAIL = 10;
     public static final double VIBRATE_FIFTH_FAIL = 0;
+    private static final int EXCELLENT = 60;
+    private static final int DOMINATTING = 70;
+    private static final int UNSTOPPABLE = 80;
+    private static final int RAMPAGE = 90;
+    private static final int GODLIKE = 100;
+    private boolean mWarmup = false;
     /**
      * Constant used for measuring time when step should count as perfect.
      */
@@ -47,12 +55,15 @@ public class Threshold {
      */
     private final double M_GOOD;
     private double intervalLength;
+    private int mScoreFeedback =0;
+
 
 
     /**
      * The constructor sets up the threshold with two constants. The constants are used for calculating
      * score.
      * Author Alexander & Patrik
+     *
      * @param perfect           Maximum time for a step should be counting as perfect.
      * @param good              Maximum time for a step should be counting as perfect.
      * @param mBPM
@@ -70,17 +81,18 @@ public class Threshold {
     /**
      * Constructor is only used for testing.
      * Author Alexander & Patrik
+     *
      * @param perfect
      * @param good
-     * @param mBPM
+     * @param bpm
      */
-    public Threshold(double perfect, double good, int mBPM, int songLength, MainActivity mListener, Context context) {
-        this.mBPM = mBPM;
+    public Threshold(double perfect, double good, int bpm, int songLength, MainActivity listener, Context context) {
+        mBPM = bpm;
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
         M_GOOD = good;
         buffer = new StepBuffer();
-        this.mListener = mListener;
+        mListener = listener;
         mFeedBackListener = new FeedbackListener() {
 
             @Override
@@ -98,8 +110,9 @@ public class Threshold {
     }
 
     /**
-     *  DUNNO?
-     *  Author Alexander & Patrik
+     * DUNNO?
+     * Author Alexander & Patrik
+     *
      * @param beatsPerMinute
      * @param songLength
      * @return
@@ -122,24 +135,27 @@ public class Threshold {
 
     /**
      * Starts the socre counting
-     *  Author Alexander, Patrik & Ludwig
+     * Author Alexander, Patrik & Ludwig
+     *
      * @param startTime A long with a timestamp.
      */
     public void startThreshold(long startTime) {
         timer = new Timer();
+        mDecSoretimer = new Timer();
+        mFeedbackTimer = new Timer();
         mStartTime = startTime;
-        timer.schedule(new FeedBackTimer(), 0, 10000);
-        timer.schedule(new DecresePoints(), 0, 5000);
-        Log.d(TAG, "startThreshold: ");
-//        worker = new Worker();
-//        worker.start();
         mStepTimer = new Timer();
+
+
+        timer.schedule(new FeedBackTimer(), 0, 10000);
+        mDecSoretimer.schedule(new DecresePoints(), 0, 5000);
+        mFeedbackTimer.schedule(new CheckScore(), 0, 7000);
         mStepTimer.schedule(new StepTimer(), 0, (long) (intervalLength * 1000));
+        toggleWarmup();
     }
 
     /**
-     * @param stepTimeStamp§
-     *  Author Alexander & Patrik
+     * @param stepTimeStamp§ Author Alexander & Patrik
      */
     public void postTimeStamp(long stepTimeStamp) {
         Log.d(TAG, "postTimeStamp: running ");
@@ -163,35 +179,38 @@ public class Threshold {
         public void run() {
             Log.d(TAG, "DecresePoints " + mBarValue);
 
-            long difference = Math.abs(mCurrentStep - mLastStep);
+            if (!mWarmup) {
+                long difference = Math.abs(mCurrentStep - mLastStep);
                 if (1000 >= difference) {
-                mExpoCount++;
-                    if(!startCheck){
+                    mExpoCount++;
+                    if (!startCheck) {
                         mBarValue -= 1.25 * mExpoCount;
                     }
 
-                if (mBarValue < VIBRATE_FIRST_FAIL && mBarValue > VIBRATE_SECOND_FAIL) {
-                    mVibrator.vibrate(Vibrate.VIBRATION_FIRST);
-                    Log.d(TAG, "Value1: " + mBarValue);
-                } else if (mBarValue < VIBRATE_SECOND_FAIL && mBarValue > VIBRATE_THIRD_FAIL) {
-                    Log.d(TAG, "Value2: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATION_SECOND);
-                } else if (mBarValue < VIBRATE_THIRD_FAIL && mBarValue > VIBRATE_FOURTH_FAIL) {
-                    Log.d(TAG, "Value3: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATION_THIRD);
-                } else if (mBarValue < VIBRATE_FOURTH_FAIL && mBarValue > VIBRATE_FIFTH_FAIL) {
-                    Log.d(TAG, "Value4: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATION_FOURTH);
-                } else if (mBarValue < VIBRATE_FIFTH_FAIL) {
-                    Log.d(TAG, "Value5: " + mBarValue);
-                    mVibrator.vibrate(Vibrate.VIBRATE_END);
+                    if (mBarValue < VIBRATE_FIRST_FAIL && mBarValue > VIBRATE_SECOND_FAIL) {
+                        mVibrator.vibrate(Vibrate.VIBRATION_FIRST);
+                        Log.d(TAG, "Value1: " + mBarValue);
+                    } else if (mBarValue < VIBRATE_SECOND_FAIL && mBarValue > VIBRATE_THIRD_FAIL) {
+                        Log.d(TAG, "Value2: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATION_SECOND);
+                    } else if (mBarValue < VIBRATE_THIRD_FAIL && mBarValue > VIBRATE_FOURTH_FAIL) {
+                        Log.d(TAG, "Value3: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATION_THIRD);
+                    } else if (mBarValue < VIBRATE_FOURTH_FAIL && mBarValue > VIBRATE_FIFTH_FAIL) {
+                        Log.d(TAG, "Value4: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATION_FOURTH);
+                    } else if (mBarValue < VIBRATE_FIFTH_FAIL) {
+                        Log.d(TAG, "Value5: " + mBarValue);
+                        mVibrator.vibrate(Vibrate.VIBRATE_END);
+                    }
+                } else {
+                    mExpoCount = 0;
                 }
             } else {
-                mExpoCount = 0;
+                toggleWarmup(); // Warmup should be set to false after first time
             }
-            startCheck= false;
+            startCheck = false;
             mLastStep = mCurrentStep;
-
         }
     }
 
@@ -237,22 +256,24 @@ public class Threshold {
             try {
                 mCurrentStep = buffer.remove();
                 double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
-                int currentBeat = getBeatInSong(currentTimeInSong);
-//                double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
+                //int currentBeat = getBeatInSong(currentTimeInSong);
+                //double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
                 double difference = (currentTimeInSong % intervalLength) * 1000.0;
 //                Log.i(TAG, "timeStamp" + timeStamp);
 //                Log.i(TAG, "currentTimeInSong: " + currentTimeInSong);
 //                Log.i(TAG, "diff " + difference);
 //                Log.i(TAG, "nextdiff: " + differenceNext);
                 Log.i(TAG, "run: " + difference);
-                if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
-                    mCurrentScore += 1;
-                    Log.e(TAG, "PERFECT");
-                } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
-                    mCurrentScore += 0.75;
-                    Log.e(TAG, "GOOD");
-                } else {
-                    Log.e(TAG, "FAIL");
+                if (!mWarmup) {
+                    if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
+                        mCurrentScore += 1;
+                        Log.e(TAG, "PERFECT");
+                    } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
+                        mCurrentScore += 0.75;
+                        Log.e(TAG, "GOOD");
+                    } else {
+                        Log.e(TAG, "FAIL");
+                    }
                 }
 
             } catch (InterruptedException e) {
@@ -290,9 +311,64 @@ public class Threshold {
      * Cancels the timer. Used in the pause function.
      */
     public void pause() {
-        startCheck=true;
+        startCheck = true;
         Log.d(TAG, "pause: " + mBarValue);
         timer.cancel();
+         mDecSoretimer.cancel();
+        mFeedbackTimer.cancel();;
+        mStepTimer.cancel();
     }
 
+    /**
+     * Toggles the warmup flag.
+     */
+    public void toggleWarmup() {
+        mWarmup = !mWarmup;
+    }
+
+    private class CheckScore extends TimerTask {
+
+        /**
+         * The action to be performed by this timer task.
+         */
+        @Override
+        public void run() {
+            int score = (int) mBarValue;
+
+            if (score <= EXCELLENT && score >= 50) {
+                Log.d(TAG, "EXCELLENT: " + score);
+                if(mScoreFeedback!=1){
+                    mScoreFeedback=1;
+                    mListener.playFeedback(1);
+                }
+
+            } else if (score <= DOMINATTING && score > EXCELLENT ) {
+                if(mScoreFeedback!=2){
+                    mScoreFeedback=2;
+                    mListener.playFeedback(2);
+                }
+
+                Log.d(TAG, "DOMINATTING: " + score);
+            } else if (score <= UNSTOPPABLE && score > DOMINATTING ) {
+                Log.d(TAG, "UNSTOPPABLE: " + score);
+                if(mScoreFeedback!=3){
+                    mScoreFeedback=3;
+                    mListener.playFeedback(3);
+                }
+            } else if (score <= RAMPAGE && score > UNSTOPPABLE ) {
+                Log.d(TAG, "RAMPAGE: " + score);
+                if(mScoreFeedback!=4){
+                    mScoreFeedback=4;
+                    mListener.playFeedback(4);
+                }
+            } else if (score <= GODLIKE && score > RAMPAGE ) {
+                Log.d(TAG, "GODLIKE: " + score);
+                if(mScoreFeedback!=5){
+                    mScoreFeedback=5;
+                    mListener.playFeedback(5);
+                }
+            }
+
+        }
+    }
 }

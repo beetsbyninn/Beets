@@ -21,9 +21,7 @@ import java.io.IOException;
  *
  */
 public class MainActivity extends AppCompatActivity {
-
-
-    private   long timePause;
+    private long timePause;
     private Threshold threshold;
     private SensorHandler sensorHandler;
     private Vibrate mVibrator;
@@ -32,9 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private boolean mBound = false;
     private BeetsServiceConnection mServiceConnection;
     private GaugeFragment gaugeFragment;
+    private SongListFragment songListFragment;
+
 
 
     private StatsDB statsDB;
+
+
+    private Song mSong;
 
     private MusicPlayer mMusicPlayer;
     private boolean mIsplaying = false;
@@ -45,12 +48,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Log.d(TAG, "onCreate: SERVICE CONNECTION");
         mServiceConnection = new BeetsServiceConnection(this);
         bindService();
+    }
 
-        mMusicPlayer = new MusicPlayer(this);
+    public void initGaugeFragment() {
+        mMusicPlayer = new MusicPlayer(this, mSong);
         mMusicPlayer.initSongMediaPlayer();
+
         Score score = new Score(45,"dancewithme");
         ScoreFragment scoreFragment = new ScoreFragment();
         scoreFragment.setScore(score);
@@ -59,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
         setFragment(scoreFragment, false);
     }
 
+
+
+
+    public void initSongListFragment() {
+        songListFragment = new SongListFragment();
+        setFragment(songListFragment, false);
+    }
 
 
     /**
@@ -93,14 +106,19 @@ public class MainActivity extends AppCompatActivity {
         mServiceConnection = new BeetsServiceConnection(this);
         Intent intent = new Intent(this, BeetsService.class);
         if (bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
-            Log.d(TAG, "bindService: Service connectin Succsed");
+            Log.d(TAG, "bindService: Service connection succeeded");
+
+            Log.d(TAG, "bindService: song " + (mSong == null ? "true" : "false"));
+            if(mSong != null) {
+                Log.d(TAG, "bindService: gauge song title" + mSong.getSongTitle());
+                initGaugeFragment();
+            } else {
+                Log.d(TAG, "bindService: list fragment");
+                initSongListFragment();
+            }
         } else {
             Toast.makeText(mBeetsService, "Service connection failed", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "bindService: Service connection failed");
-
-
-
-
         }
     }
 
@@ -109,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
     /**
      *
      */
-    public void initalizaise() {
-        if(mIsplaying == false) {
-            mBeetsService.startSong(120,System.currentTimeMillis());
+    public void initialise() {
+        if(!mIsplaying) {
+            mBeetsService.startSong(mSong, System.currentTimeMillis());
             mMusicPlayer.playSong();
             mIsplaying = true;
-        }else if(mIsplaying){
+        } else {
             mMusicPlayer.stopSong();
             mIsplaying = false;
         }
@@ -155,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
      * Author Ludwig Ninn
      */
     public void pause(){
-         timePause = System.currentTimeMillis();
+        timePause = System.currentTimeMillis();
         threshold.pause();
         mVibrator.cancel();
         sensorHandler.pause(false);
@@ -189,4 +207,20 @@ public class MainActivity extends AppCompatActivity {
         gaugeFragment.checkStartPause();
     }
 
+    public void setSong(Song song) {
+        mSong = song;
+    }
+
+    public void playFeedback(int i) {
+        try {
+            mMusicPlayer.playFeedback(i);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
