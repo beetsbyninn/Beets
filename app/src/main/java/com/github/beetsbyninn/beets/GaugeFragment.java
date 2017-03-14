@@ -87,7 +87,7 @@ public class GaugeFragment extends Fragment {
             if(!firstime){
                 mainActivty.start();
             }else{
-                mainActivty.initalizaise();
+                mainActivty.initialise();
             }
 
             firstime=false;

@@ -19,8 +19,6 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
     private static final String TAG = "BeetsService";
     private SensorHandler sensorHandler;
     private LocalBinder mBinder = new LocalBinder();
-    private MusicPlayer mMusicPlayer;
-    private ArrayList timeStamps = new ArrayList();
     private MainActivity mListener;
 
     private Threshold mThreshold;
@@ -36,17 +34,17 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
     }
 
     /**
-     * Themethod createas a new threshold object that should count the score of the song.
-     * @param bpm
-     *      The bpm of the current song.
+     * Themethod creates a new threshold object that should count the score of the song.
+     * @param song
+     *      Current song to start
      * @param startTime
      *      The start time of the song.
      */
-    public void startSong(int bpm, long startTime) {
+    public void startSong(Song song, long startTime) {
+        Log.d(TAG, "startSong: " + song.getSongTitle() + " " + song.getSongArtist());
         sensorHandler.registerListener();
-        mThreshold = new Threshold(50.0, 125.0, 128, 184, mListener,this);
+        mThreshold = new Threshold(50.0, 125.0, song.getBpm(), song.getSongLength(), mListener, this);
         mThreshold.startThreshold(startTime);
-
     }
 
 
@@ -54,15 +52,7 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
     public void onCreate() {
         super.onCreate();
 
-        sensorHandler = new SensorHandler(this,this,this);
-
-        mMusicPlayer = new MusicPlayer(this);
-        try {
-            mMusicPlayer.initStepMediaPlayer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        sensorHandler = new SensorHandler(this, this, this);
     }
 
     @Override

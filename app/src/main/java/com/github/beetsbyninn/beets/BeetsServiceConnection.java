@@ -27,7 +27,6 @@ public class BeetsServiceConnection implements ServiceConnection {
         mMainAcitivty.setService(binder.getService());
         mMainAcitivty.setBound(true);
         binder.getService().setListenerActivity(mMainAcitivty);
-
     }
 
     @Override

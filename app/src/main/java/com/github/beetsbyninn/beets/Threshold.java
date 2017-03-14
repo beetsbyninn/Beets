@@ -72,15 +72,15 @@ public class Threshold {
      * Author Alexander & Patrik
      * @param perfect
      * @param good
-     * @param mBPM
+     * @param bpm
      */
-    public Threshold(double perfect, double good, int mBPM, int songLength, MainActivity mListener, Context context) {
-        this.mBPM = mBPM;
+    public Threshold(double perfect, double good, int bpm, int songLength, MainActivity listener, Context context) {
+        mBPM = bpm;
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
         M_GOOD = good;
         buffer = new StepBuffer();
-        this.mListener = mListener;
+        mListener = listener;
         mFeedBackListener = new FeedbackListener() {
 
             @Override
@@ -237,8 +237,8 @@ public class Threshold {
             try {
                 mCurrentStep = buffer.remove();
                 double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
-                int currentBeat = getBeatInSong(currentTimeInSong);
-//                double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
+                //int currentBeat = getBeatInSong(currentTimeInSong);
+                //double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
                 double difference = (currentTimeInSong % intervalLength) * 1000.0;
 //                Log.i(TAG, "timeStamp" + timeStamp);
 //                Log.i(TAG, "currentTimeInSong: " + currentTimeInSong);
