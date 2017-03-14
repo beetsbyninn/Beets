@@ -49,23 +49,29 @@ public class StatsDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Score getScore(String songName){
+    /**
+     * Retrieves all scores from the database.
+     * @return
+     */
+    public Score[] getAllScores(){
+
+        int statsIndex,songIndex;
         String query = "SELECT * FROM " + TABLE_STATS; //+ " WHERE " + KEY_SONG + "=" + songName;
          SQLiteDatabase db = this.getWritableDatabase();
         Log.d("db","innehåll: " + query);
         Cursor cursor = db.rawQuery(query,null);
-        Score score;
+        statsIndex = cursor.getColumnIndex(KEY_STATS);
+        songIndex = cursor.getColumnIndex(KEY_SONG);
 
-
+        Score[] allScores = new Score[cursor.getCount()];
         if(cursor.moveToFirst()){
-            cursor.moveToFirst();
-            score = new Score(cursor.getInt(1),cursor.getString(2));
-            Log.d("score added",score.getStat() +" "  + score.getSong());
-
+         for (int i = 0;i<allScores.length;i++){
+            allScores[i] = new Score(cursor.getInt(statsIndex),cursor.getString(songIndex));
+         }
         }else{
-            score = null;
+            allScores = null;
         }
         db.close();
-        return score;
+        return allScores;
     }
 }

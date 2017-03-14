@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        statsDB = new StatsDB(this);
-        testDB();
+
 
         mServiceConnection = new BeetsServiceConnection(this);
         bindService();
@@ -60,11 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setFragment(scoreFragment, false);
     }
 
-    public void testDB(){
-        Score score = new Score(76,"dancewithme");
-        statsDB.addScore(score);
-        Log.d("add",score.getSong());
-    }
+
 
     /**
      * Sets a reference to the service

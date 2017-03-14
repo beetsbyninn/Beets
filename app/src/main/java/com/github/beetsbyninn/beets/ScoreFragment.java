@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,16 @@ import android.widget.TextView;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment showing the score you got after you finished a song.
+ *
+ * @author Jonatan and Oscar
  */
 public class ScoreFragment extends Fragment {
 
     private TextView tvSong, tvScore;
     private ImageView ivThrophy;
     private Score score;
+    private StatsDB statsDB;
 
     public ScoreFragment() {
         // Required empty public constructor
@@ -36,13 +40,15 @@ public class ScoreFragment extends Fragment {
         tvScore = (TextView)view.findViewById(R.id.tvStat);
         ivThrophy = (ImageView)view.findViewById(R.id.ivTrophy);
         getScore();
+        statsDB = new StatsDB(getActivity());
         return view;
     }
 
+    /**
+     * Retrieves the score from the current session and displays it and adds to Database if
+     * it's the highest score on the current song.
+     */
     public void getScore () {
-        StatsDB dbHandler = new StatsDB(getActivity());
-       // Score score = dbHandler.getScore("dancewithme");
-        //TODO lägg till score objektet i DB för att sedan visa alla highscores.
 
         if (score != null) {
             tvSong.setText(String.valueOf(score.getSong()));
@@ -65,6 +71,8 @@ public class ScoreFragment extends Fragment {
                 }
             });
             valueAnimator.start();
+            // TODO: Kolla om det är den högsta poängen på nuvarande låt, såfall ska den läggas till i DB.
+            statsDB.addScore(score);
         } else {
             tvScore.setText("No Match Found");
         }
@@ -74,4 +82,6 @@ public class ScoreFragment extends Fragment {
     public void setScore(Score score) {
         this.score = score;
     }
+
+
 }
