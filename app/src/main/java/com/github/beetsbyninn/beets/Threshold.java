@@ -28,6 +28,8 @@ public class Threshold {
     private MainActivity mListener;
     private Context mContext;
     private double[] perodicArray;
+    private Song mSong;
+    private int mSongLength;
 
     private long mLastStep;
     private long mCurrentStep;
@@ -45,6 +47,7 @@ public class Threshold {
     private static final int RAMPAGE = 90;
     private static final int GODLIKE = 100;
     private boolean mWarmup = false;
+    private int mTotalScore;
     /**
      * Constant used for measuring time when step should count as perfect.
      */
@@ -84,13 +87,16 @@ public class Threshold {
      *
      * @param perfect
      * @param good
-     * @param bpm
      */
-    public Threshold(double perfect, double good, int bpm, int songLength, MainActivity listener, Context context) {
-        mBPM = bpm;
+    public Threshold(double perfect, double good, Song song, MainActivity listener, Context context) {
+
 //        this.mFeedBackListener = mFeedBackListener;
         M_PERFECT = perfect;
         M_GOOD = good;
+        mSong = song;
+        mBPM = song.getBpm();
+        mSongLength = song.getSongLength();
+        Log.d("song info", String.valueOf(mSong.getSongLength()) + " " + String.valueOf(mSong.getBpm()));
         buffer = new StepBuffer();
         mListener = listener;
         mFeedBackListener = new FeedbackListener() {
@@ -105,13 +111,13 @@ public class Threshold {
         mContext = context;
         mVibrator = new Vibrate(mContext);
         mListener.setVibrator(mVibrator);
-        perodicArray = getRhythmPeriodicy(mBPM, songLength);
+        perodicArray = getRhythmPeriodicy(mBPM, mSongLength);
         Log.d(TAG, "Threshold: Array" + Arrays.toString(perodicArray));
     }
 
     /**
      * DUNNO?
-     * Author Alexander & Patrik
+     * Author Aleksander & Patricia
      *
      * @param beatsPerMinute
      * @param songLength
@@ -274,6 +280,18 @@ public class Threshold {
                     } else {
                         Log.e(TAG, "FAIL");
                     }
+                    mTotalScore+=mCurrentScore;
+                }
+                double timeInSong = (System.currentTimeMillis() - mStartTime) / 1000.0;
+                Log.d("timeInsong",String.valueOf(timeInSong) + " max: " + mSongLength);
+                if(((int) timeInSong) >= mSongLength) {
+                    pause();
+                    Score score = new Score(mTotalScore,mSong.getId());
+
+
+                    ScoreFragment scoreFragment = new ScoreFragment();
+                    scoreFragment.setScore(score);
+                    mListener.setFragment(scoreFragment,false);
                 }
 
             } catch (InterruptedException e) {

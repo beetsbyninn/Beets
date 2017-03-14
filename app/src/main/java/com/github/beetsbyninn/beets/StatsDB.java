@@ -28,7 +28,7 @@ public class StatsDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_STATS_TABLE = "CREATE TABLE " + TABLE_STATS + "(" + KEY_ID +
-                " INTEGER PRIMARY KEY," + KEY_STATS + " INTEGER," + KEY_SONG + " TEXT" + ")";
+                " INTEGER PRIMARY KEY," + KEY_STATS + " INTEGER," + KEY_SONG + " INTEGER" + ")";
         sqLiteDatabase.execSQL(CREATE_STATS_TABLE);
     }
 
@@ -41,7 +41,7 @@ public class StatsDB extends SQLiteOpenHelper {
     public void addScore(Score score){
         ContentValues values = new ContentValues();
         values.put(KEY_STATS, score.getStat());
-        values.put(KEY_SONG, score.getSong());
+        values.put(KEY_SONG, score.getSongId());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -66,7 +66,7 @@ public class StatsDB extends SQLiteOpenHelper {
         Score[] allScores = new Score[cursor.getCount()];
         if(cursor.moveToFirst()){
          for (int i = 0;i<allScores.length;i++){
-            allScores[i] = new Score(cursor.getInt(statsIndex),cursor.getString(songIndex));
+            allScores[i] = new Score(cursor.getInt(statsIndex),cursor.getInt(songIndex));
          }
         }else{
             allScores = null;

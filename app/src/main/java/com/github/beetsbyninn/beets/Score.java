@@ -6,26 +6,26 @@ package com.github.beetsbyninn.beets;
 
 public class Score {
     private int stat;
-    private String song;
+    private int songId;
 
-    public Score(int stat, String song){
+    public Score(int stat, int songId){
         this.stat = stat;
-        this.song = song;
+        this.songId = songId;
     }
 
     public int getStat() {
         return stat;
     }
 
-    public String getSong() {
-        return song;
+    public int getSongId() {
+        return songId;
     }
 
     public void setStat(int stat) {
         this.stat = stat;
     }
 
-    public void setSong(String song) {
-        this.song = song;
+    public void setSongId(int songId) {
+        this.songId = songId;
     }
 }

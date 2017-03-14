@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private BeetsServiceConnection mServiceConnection;
     private GaugeFragment gaugeFragment;
     private SongListFragment songListFragment;
-
+    public static ArrayList<Song> mSongList;
 
 
     private StatsDB statsDB;
@@ -57,18 +58,20 @@ public class MainActivity extends AppCompatActivity {
         mMusicPlayer = new MusicPlayer(this, mSong);
         mMusicPlayer.initSongMediaPlayer();
 
-        Score score = new Score(45,"dancewithme");
-        ScoreFragment scoreFragment = new ScoreFragment();
-        scoreFragment.setScore(score);
 
         gaugeFragment = new GaugeFragment();
-        setFragment(scoreFragment, false);
+        setFragment(gaugeFragment, false);
     }
 
 
 
 
     public void initSongListFragment() {
+        mSongList = new ArrayList<>();
+        mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 194, R.raw.shutup,0));
+        mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 184, R.raw.callmemaybe,1));
+        mSongList.add(new Song("TestSong", "Jonte", 95, 36, R.raw.testsong1,2));
+
         songListFragment = new SongListFragment();
         setFragment(songListFragment, false);
     }
@@ -209,6 +212,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSong(Song song) {
         mSong = song;
+    }
+
+    public ArrayList<Song> getSongList(){
+
+        return mSongList;
     }
 
     public void playFeedback(int i) {

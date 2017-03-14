@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 /**
  * Fragment showing the score you got after you finished a song.
@@ -39,8 +41,9 @@ public class ScoreFragment extends Fragment {
         tvSong = (TextView)view.findViewById(R.id.tvSongName);
         tvScore = (TextView)view.findViewById(R.id.tvStat);
         ivThrophy = (ImageView)view.findViewById(R.id.ivTrophy);
-        getScore();
         statsDB = new StatsDB(getActivity());
+        getScore();
+
         return view;
     }
 
@@ -51,7 +54,10 @@ public class ScoreFragment extends Fragment {
     public void getScore () {
 
         if (score != null) {
-            tvSong.setText(String.valueOf(score.getSong()));
+            MainActivity activity = (MainActivity) getActivity();
+            ArrayList<Song> mSonglist= activity.getSongList();
+            mSonglist.get(score.getSongId());
+            tvSong.setText(String.valueOf(score.getSongId()));
             if(score.getStat()<50){
                 ivThrophy.setImageResource(R.drawable.failtrophy);
             }else if(score.getStat()>=50 && score.getStat()< 75){
