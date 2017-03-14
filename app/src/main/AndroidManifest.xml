@@ -3,8 +3,7 @@
     package="com.github.beetsbyninn.beets">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -32,8 +31,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity
-            android:name=".TutorialActivity" ></activity>
+        <activity android:name=".TutorialActivity" />
+        <activity android:name=".Meny"></activity>
     </application>
 
 </manifest>

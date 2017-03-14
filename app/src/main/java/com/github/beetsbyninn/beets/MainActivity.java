@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         bindService();
     }
 
+    public void initMeny(){
+        MenyFragment  menyFragment = new MenyFragment();
+        setFragment(menyFragment, false);
+    }
     public void initGaugeFragment() {
         mMusicPlayer = new MusicPlayer(this, mSong);
         mMusicPlayer.initSongMediaPlayer();
@@ -91,15 +95,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, BeetsService.class);
         if (bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
             Log.d(TAG, "bindService: Service connection succeeded");
-
-            Log.d(TAG, "bindService: song " + (mSong == null ? "true" : "false"));
+            initMeny();
+         /*   Log.d(TAG, "bindService: song " + (mSong == null ? "true" : "false"));
             if(mSong != null) {
                 Log.d(TAG, "bindService: gauge song title" + mSong.getSongTitle());
-                initGaugeFragment();
+                initMeny();
             } else {
                 Log.d(TAG, "bindService: list fragment");
                 initSongListFragment();
-            }
+            }*/
         } else {
             Toast.makeText(mBeetsService, "Service connection failed", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "bindService: Service connection failed");
