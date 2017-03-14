@@ -40,7 +40,13 @@ public class MusicPlayer {
      */
     public void initSongMediaPlayer() {
         mSongMediaPlayer = MediaPlayer.create(mMainActivity, mSong.getResourceId());
+        try {
+            initFeedbackMediaPlayer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Starts the SongMediaplayer and plays the initialized song.
@@ -98,9 +104,7 @@ public class MusicPlayer {
                 Log.d(TAG, "GODLIKE: " + threshold);
                 mFeedbackGodlikeMediaPlayer.start();
                 break;
-            case 6:
-                mFeedbackbottomfeederMediaPlayer.start();
-                break;
+
 
         }
 

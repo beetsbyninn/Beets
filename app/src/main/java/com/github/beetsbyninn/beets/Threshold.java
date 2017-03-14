@@ -55,6 +55,8 @@ public class Threshold {
      */
     private final double M_GOOD;
     private double intervalLength;
+    private int mScoreFeedback =0;
+
 
 
     /**
@@ -312,6 +314,9 @@ public class Threshold {
         startCheck = true;
         Log.d(TAG, "pause: " + mBarValue);
         timer.cancel();
+         mDecSoretimer.cancel();
+        mFeedbackTimer.cancel();;
+        mStepTimer.cancel();
     }
 
     /**
@@ -332,21 +337,36 @@ public class Threshold {
 
             if (score <= EXCELLENT && score >= 50) {
                 Log.d(TAG, "EXCELLENT: " + score);
-                mListener.playFeedback(1);
-            } else if (score <= DOMINATTING && score > EXCELLENT) {
-                mListener.playFeedback(2);
+                if(mScoreFeedback!=1){
+                    mScoreFeedback=1;
+                    mListener.playFeedback(1);
+                }
+
+            } else if (score <= DOMINATTING && score > EXCELLENT ) {
+                if(mScoreFeedback!=2){
+                    mScoreFeedback=2;
+                    mListener.playFeedback(2);
+                }
+
                 Log.d(TAG, "DOMINATTING: " + score);
-            } else if (score <= UNSTOPPABLE && score > DOMINATTING) {
+            } else if (score <= UNSTOPPABLE && score > DOMINATTING ) {
                 Log.d(TAG, "UNSTOPPABLE: " + score);
-                mListener.playFeedback(3);
-            } else if (score <= RAMPAGE && score > UNSTOPPABLE) {
+                if(mScoreFeedback!=3){
+                    mScoreFeedback=3;
+                    mListener.playFeedback(3);
+                }
+            } else if (score <= RAMPAGE && score > UNSTOPPABLE ) {
                 Log.d(TAG, "RAMPAGE: " + score);
-                mListener.playFeedback(4);
-            } else if (score <= GODLIKE && score > RAMPAGE) {
+                if(mScoreFeedback!=4){
+                    mScoreFeedback=4;
+                    mListener.playFeedback(4);
+                }
+            } else if (score <= GODLIKE && score > RAMPAGE ) {
                 Log.d(TAG, "GODLIKE: " + score);
-                mListener.playFeedback(5);
-            }else if(score<10){
-                mListener.playFeedback(6);
+                if(mScoreFeedback!=5){
+                    mScoreFeedback=5;
+                    mListener.playFeedback(5);
+                }
             }
 
         }
