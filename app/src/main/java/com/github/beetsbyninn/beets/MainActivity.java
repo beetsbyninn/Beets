@@ -195,6 +195,14 @@ public class MainActivity extends AppCompatActivity {
         mSong = song;
     }
 
+    public void playFeedback(int i) {
+        try {
+            mMusicPlayer.playFeedback(i);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
