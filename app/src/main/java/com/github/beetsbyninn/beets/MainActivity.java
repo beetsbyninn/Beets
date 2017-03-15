@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "onCreate: SERVICE CONNECTION");
-        mServiceConnection = new BeetsServiceConnection(this);
         bindService();
     }
+
 
 
     @Override
@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+    public void initMeny(){
+        MenyFragment  menyFragment = new MenyFragment();
+        setFragment(menyFragment, false);
+    }
 
     public void initGaugeFragment() {
         mMusicPlayer = new MusicPlayer(this, mSong);
@@ -115,20 +121,20 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Tries to bind the service.
      */
-    private void bindService() {
+   public void bindService() {
         mServiceConnection = new BeetsServiceConnection(this);
         Intent intent = new Intent(this, BeetsService.class);
         if (bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
             Log.d(TAG, "bindService: Service connection succeeded");
-
-            Log.d(TAG, "bindService: song " + (mSong == null ? "true" : "false"));
+            initMeny();
+         /*   Log.d(TAG, "bindService: song " + (mSong == null ? "true" : "false"));
             if(mSong != null) {
                 Log.d(TAG, "bindService: gauge song title" + mSong.getSongTitle());
-                initGaugeFragment();
+                initMeny();
             } else {
                 Log.d(TAG, "bindService: list fragment");
                 initSongListFragment();
-            }
+            }*/
         } else {
             Toast.makeText(mBeetsService, "Service connection failed", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "bindService: Service connection failed");
@@ -242,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
+
     public void setSongEnded(boolean b) {
         songEnded = b;
     }
@@ -254,5 +261,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             songEnded = true;
         }
+
+    }
+
+    public void unbind(){
+
+        sensorHandler.onDestroy();
+        mMusicPlayer.stopSong();
+        mServiceConnection.stop();
+        if(threshold!=null){
+            threshold.destory();
+        }
+
+
+
     }
 }

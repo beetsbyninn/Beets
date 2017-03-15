@@ -14,5 +14,11 @@
     <string name="pick_song">Pick a song to play!</string>
     <string name="bpm">BPM</string>
     <string name="song_length">Song Length</string>
+    <string name="exit">Exit</string>
+    <string name="startgame">Start Game</string>
+    <string name="highscore">High Score</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
