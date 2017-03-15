@@ -3,6 +3,7 @@ package com.github.beetsbyninn.beets;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,7 +53,18 @@ public class GaugeFragment extends Fragment {
         Typeface typeFace=Typeface.createFromAsset(getActivity().getAssets(),"street cred.ttf");
         tvBar.setTypeface(typeFace);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        ImageView img = (ImageView) view.findViewById(R.id.imageButton);
+        img.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mainActivty.unbind();
+                Intent i = new Intent(mainActivty,MainActivity.class);
+                startActivity(i);
+                mainActivty.finish();
+
+            }
+        });
         return view;
+
     }
 
     /**

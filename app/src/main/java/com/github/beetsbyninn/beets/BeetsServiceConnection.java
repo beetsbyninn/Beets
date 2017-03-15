@@ -9,6 +9,7 @@ import android.os.IBinder;
  */
 public class BeetsServiceConnection implements ServiceConnection {
     private MainActivity mMainAcitivty;
+    private BeetsService service;
 
     /**
      * Gets a reference to the Main Activity.
@@ -23,7 +24,7 @@ public class BeetsServiceConnection implements ServiceConnection {
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         BeetsService.LocalBinder binder = (BeetsService.LocalBinder) iBinder;
-
+       service = binder.getService();
         mMainAcitivty.setService(binder.getService());
         mMainAcitivty.setBound(true);
         binder.getService().setListenerActivity(mMainAcitivty);
@@ -32,5 +33,8 @@ public class BeetsServiceConnection implements ServiceConnection {
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
         mMainAcitivty.setBound(false);
+    }
+    public void stop(){
+        service.stopSelf();
     }
 }
