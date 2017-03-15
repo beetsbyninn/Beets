@@ -47,15 +47,14 @@
         android:layout_marginBottom="91dp" />
 
     <ImageView
-        android:padding="5px"
+
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="center"
-        android:src="@drawable/settings"
+        android:src="@drawable/ic_action_name"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/tvBar" />
+        android:layout_alignStart="@+id/tvBar" />
 
 
 </RelativeLayout>

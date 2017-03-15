@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Tries to bind the service.
      */
-    private void bindService() {
+   public void bindService() {
         mServiceConnection = new BeetsServiceConnection(this);
         Intent intent = new Intent(this, BeetsService.class);
         if (bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
@@ -210,5 +210,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    public void unbind(){
+        sensorHandler.onDestroy();
+        mMusicPlayer.stopSong();
+        mServiceConnection.stop();
+        threshold.destory();
+
+
     }
 }
