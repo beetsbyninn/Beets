@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * @author Jonatan and Oscar
  */
 public class ScoreFragment extends Fragment {
-
+    private static final String TAG = "ScoreFragment";
     private TextView tvSong, tvScore;
     private ImageView ivThrophy;
     private Score score;
@@ -78,7 +78,16 @@ public class ScoreFragment extends Fragment {
             });
             valueAnimator.start();
             // TODO: Kolla om det är den högsta poängen på nuvarande låt, såfall ska den läggas till i DB.
-            statsDB.addScore(score);
+            int highScore = statsDB.getHighScore(score.getSongId());
+           /* if(highScore == 0){
+                statsDB.addScore(score);
+                tvScore.append(" New Highscore!!");
+            }
+            else if(highScore<score.getStat()){
+                tvScore.append(" New Highscore!!");
+                statsDB.updateHighscore(score);
+            } */
+
         } else {
             tvScore.setText("No Match Found");
         }

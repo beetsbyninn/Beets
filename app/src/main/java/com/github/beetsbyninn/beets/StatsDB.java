@@ -12,7 +12,7 @@ import android.util.Log;
  */
 
 public class StatsDB extends SQLiteOpenHelper {
-    private static final int DATABSE_VERSION =1;
+    private static final int DATABSE_VERSION =2;
 
     private static final String DATABASE_NAME = "statsDb";
     private static final String TABLE_STATS = "stats";
@@ -73,5 +73,34 @@ public class StatsDB extends SQLiteOpenHelper {
         }
         db.close();
         return allScores;
+    }
+
+    public int getHighScore(int id){
+
+        int statsIndex,songIndex;
+        String query = "SELECT " + KEY_STATS + " FROM " + TABLE_STATS + " WHERE " + KEY_SONG + "=" + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("db","innehåll: " + query);
+        Cursor cursor = db.rawQuery(query,null);
+        statsIndex = cursor.getColumnIndex(KEY_STATS);
+
+        int highScore;
+        if(cursor.moveToFirst()){
+
+                highScore = cursor.getInt(statsIndex);
+
+        }else{
+            highScore = 0;
+        }
+        db.close();
+        return highScore;
+    }
+
+    public void updateHighscore(Score score){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_STATS,score.getStat());
+
+        db.update(TABLE_STATS, values,KEY_SONG + "=" + score.getSongId() ,null);
     }
 }

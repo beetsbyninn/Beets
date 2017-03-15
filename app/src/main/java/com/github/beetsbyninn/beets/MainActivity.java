@@ -33,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private GaugeFragment gaugeFragment;
     private SongListFragment songListFragment;
     public static ArrayList<Song> mSongList;
-
-
-    private StatsDB statsDB;
-
+    private boolean songEnded = false;
+    private ScoreFragment scoreFragment;
 
     private Song mSong;
 
@@ -53,6 +51,18 @@ public class MainActivity extends AppCompatActivity {
         mServiceConnection = new BeetsServiceConnection(this);
         bindService();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(songEnded){
+            setFragment(scoreFragment,false);
+            songEnded = false;
+        }
+    }
+
+
 
     public void initGaugeFragment() {
         mMusicPlayer = new MusicPlayer(this, mSong);
@@ -230,5 +240,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    public void setSongEnded(boolean b) {
+        songEnded = b;
+    }
+
+    public void songEnded(Score score) {
+        scoreFragment = new ScoreFragment();
+        scoreFragment.setScore(score);
+        if (gaugeFragment.isScreenOn()) {
+            setFragment(scoreFragment, false);
+        } else {
+            songEnded = true;
+        }
     }
 }

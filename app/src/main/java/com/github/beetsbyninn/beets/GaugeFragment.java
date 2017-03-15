@@ -32,6 +32,7 @@ public class GaugeFragment extends Fragment {
     private boolean isPlaying = false;
     private  ProgressBar progressBar;
     private  boolean firstime=true;
+    private boolean screenOn ;
 
     public GaugeFragment()
     {
@@ -52,6 +53,22 @@ public class GaugeFragment extends Fragment {
         tvBar.setTypeface(typeFace);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         return view;
+    }
+
+    public boolean isScreenOn() {
+        return screenOn;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        screenOn = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        screenOn= false;
     }
 
     /**

@@ -287,11 +287,8 @@ public class Threshold {
                 if(((int) timeInSong) >= mSongLength) {
                     pause();
                     Score score = new Score(mTotalScore,mSong.getId());
-
-
-                    ScoreFragment scoreFragment = new ScoreFragment();
-                    scoreFragment.setScore(score);
-                    mListener.setFragment(scoreFragment,false);
+                    mListener.setSongEnded(true);
+                    mListener.songEnded(score);
                 }
 
             } catch (InterruptedException e) {
