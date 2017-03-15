@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: SERVICE CONNECTION");
-        mServiceConnection = new BeetsServiceConnection(this);
         bindService();
     }
 
@@ -213,10 +212,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void unbind(){
+
         sensorHandler.onDestroy();
         mMusicPlayer.stopSong();
         mServiceConnection.stop();
-        threshold.destory();
+        if(threshold!=null){
+            threshold.destory();
+        }
 
 
     }
