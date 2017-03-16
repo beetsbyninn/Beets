@@ -28,4 +28,12 @@ public class Score {
     public void setSongId(int songId) {
         this.songId = songId;
     }
+
+    @Override
+    public String toString() {
+        return "Score{" +
+                "stat=" + stat +
+                ", songId=" + songId +
+                '}';
+    }
 }

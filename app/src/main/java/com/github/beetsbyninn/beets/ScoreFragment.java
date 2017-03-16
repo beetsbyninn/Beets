@@ -3,6 +3,7 @@ package com.github.beetsbyninn.beets;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -42,6 +43,16 @@ public class ScoreFragment extends Fragment {
         tvScore = (TextView)view.findViewById(R.id.tvStat);
         ivThrophy = (ImageView)view.findViewById(R.id.ivTrophy);
         statsDB = new StatsDB(getActivity());
+        ImageView img = (ImageView) view.findViewById(R.id.imageButton);
+        img.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent i = new Intent(getActivity(),MainActivity.class);
+                startActivity(i);
+                getActivity().finish();
+
+            }
+        });
         getScore();
 
         return view;
@@ -79,14 +90,16 @@ public class ScoreFragment extends Fragment {
             valueAnimator.start();
             // TODO: Kolla om det är den högsta poängen på nuvarande låt, såfall ska den läggas till i DB.
             int highScore = statsDB.getHighScore(score.getSongId());
-           /* if(highScore == 0){
+            if(highScore == 0){
                 statsDB.addScore(score);
                 tvScore.append(" New Highscore!!");
+                Log.d("first score ", String.valueOf(score.getStat()));
             }
             else if(highScore<score.getStat()){
                 tvScore.append(" New Highscore!!");
                 statsDB.updateHighscore(score);
-            } */
+                Log.d("update score ", String.valueOf(score.getStat()) + " ,songId" + String.valueOf(score.getSongId()));
+            }
 
         } else {
             tvScore.setText("No Match Found");

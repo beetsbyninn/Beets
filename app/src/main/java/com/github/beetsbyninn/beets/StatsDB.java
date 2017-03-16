@@ -7,12 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Arrays;
+
 /**
  * Created by Jonte on 13-Mar-17.
  */
 
 public class StatsDB extends SQLiteOpenHelper {
-    private static final int DATABSE_VERSION =2;
+    private static final int DATABSE_VERSION =3;
 
     private static final String DATABASE_NAME = "statsDb";
     private static final String TABLE_STATS = "stats";
@@ -46,7 +48,7 @@ public class StatsDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.insert(TABLE_STATS, null, values);
-        db.close();
+
     }
 
     /**
@@ -67,11 +69,13 @@ public class StatsDB extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
          for (int i = 0;i<allScores.length;i++){
             allScores[i] = new Score(cursor.getInt(statsIndex),cursor.getInt(songIndex));
+             cursor.moveToNext();
          }
         }else{
             allScores = null;
         }
-        db.close();
+
+        Log.d("allScores", Arrays.toString(allScores));
         return allScores;
     }
 
@@ -92,7 +96,7 @@ public class StatsDB extends SQLiteOpenHelper {
         }else{
             highScore = 0;
         }
-        db.close();
+
         return highScore;
     }
 

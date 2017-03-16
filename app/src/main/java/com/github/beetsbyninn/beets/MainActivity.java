@@ -11,9 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import android.view.View;
-import android.widget.Button;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initSongs();
         Log.d(TAG, "onCreate: SERVICE CONNECTION");
         bindService();
     }
@@ -57,13 +54,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(songEnded){
+            unbind();
             setFragment(scoreFragment,false);
             songEnded = false;
         }
     }
 
 
-
+    public void initHighScore(){
+        HighscoreFragment  highscoreFragment = new HighscoreFragment();
+        setFragment(highscoreFragment, true);
+    }
 
     public void initMeny(){
         MenyFragment  menyFragment = new MenyFragment();
@@ -79,14 +80,18 @@ public class MainActivity extends AppCompatActivity {
         setFragment(gaugeFragment, false);
     }
 
+    public void initSongs(){
+        mSongList = new ArrayList<>();
+        mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 195, R.raw.shutup,0));
+        mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 184, R.raw.callmemaybe,1));
+        mSongList.add(new Song("TestSong", "Jonte", 104, 79, R.raw.testsongglue,2));
+
+    }
+
 
 
 
     public void initSongListFragment() {
-        mSongList = new ArrayList<>();
-        mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 194, R.raw.shutup,0));
-        mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 184, R.raw.callmemaybe,1));
-        mSongList.add(new Song("TestSong", "Jonte", 95, 36, R.raw.testsong1,2));
 
         songListFragment = new SongListFragment();
         setFragment(songListFragment, false);
@@ -254,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void songEnded(Score score) {
+        unbind();
         scoreFragment = new ScoreFragment();
         scoreFragment.setScore(score);
         if (gaugeFragment.isScreenOn()) {
