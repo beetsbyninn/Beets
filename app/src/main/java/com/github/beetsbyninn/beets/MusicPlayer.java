@@ -21,6 +21,11 @@ public class MusicPlayer {
     private static final int UNSTOPPABLE = 3;
     private static final int RAMPAGE = 4;
     private static final int GODLIKE = 5;
+    private static final int BRONZESOUND = 6;
+    private static final int SILVERSOUND= 7;
+    private static final int GOLDSOUND= 8;
+    private static final int FAILSOUND = 9;
+    private static final int STARTSOUND = 10;
     private static final String TAG = "MusicPlayer";
     private MediaPlayer mSongMediaPlayer;
     private MediaPlayer mFeedbackExecellentMediaPlayer;
@@ -29,6 +34,12 @@ public class MusicPlayer {
     private MediaPlayer mFeedbackRampageMediaPlayer;
     private MediaPlayer mFeedbackGodlikeMediaPlayer;
     private MediaPlayer mFeedbackbottomfeederMediaPlayer;
+    private MediaPlayer mFeedbackbronzeMediaPlayer;
+    private MediaPlayer mFeedbacksilverMediaPlayer;
+    private MediaPlayer mFeedbackgoldMediaPlayer;
+    private MediaPlayer mFeedbackstartMediaPlayer;
+    private MediaPlayer mFeedbackfailMediaPlayer;
+
 
     public MusicPlayer(Context mainActivity, Song song) {
         mMainActivity = mainActivity;
@@ -54,6 +65,11 @@ public class MusicPlayer {
     public void playSong(){
         if(!mSongMediaPlayer.isPlaying()){
             mSongMediaPlayer.start();
+            try {
+                playFeedback(10);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -74,6 +90,17 @@ public class MusicPlayer {
         mFeedbackGodlikeMediaPlayer.setVolume(0.9f,0.9f);
         mFeedbackbottomfeederMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.godlike);
         mFeedbackbottomfeederMediaPlayer.setVolume(0.9f,0.9f);
+        mFeedbackbronzeMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.bronzesound);
+        mFeedbackbronzeMediaPlayer.setVolume(0.9f,0.9f);
+        mFeedbacksilverMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.silversound);
+        mFeedbacksilverMediaPlayer.setVolume(0.9f,0.9f);
+        mFeedbackgoldMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.goldsound);
+        mFeedbackgoldMediaPlayer.setVolume(0.9f,0.9f);
+        mFeedbackfailMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.failsound);
+        mFeedbackfailMediaPlayer.setVolume(0.9f,0.9f);
+        mFeedbackstartMediaPlayer = MediaPlayer.create(mMainActivity, R.raw.startsound);
+        mFeedbackstartMediaPlayer.setVolume(1.0f,1.0f);
+
 
 
     }
@@ -103,6 +130,26 @@ public class MusicPlayer {
             case GODLIKE:
                 Log.d(TAG, "GODLIKE: " + threshold);
                 mFeedbackGodlikeMediaPlayer.start();
+                break;
+            case BRONZESOUND:
+                Log.d(TAG, "Bronze: " );
+                mFeedbackbronzeMediaPlayer.start();
+                break;
+            case SILVERSOUND:
+                Log.d(TAG, "SILVER: " );
+                mFeedbacksilverMediaPlayer.start();
+                break;
+            case GOLDSOUND:
+                Log.d(TAG, "GOLD: " );
+                mFeedbackgoldMediaPlayer.start();
+                break;
+            case FAILSOUND:
+                Log.d(TAG, "FAIL: " );
+                mFeedbackfailMediaPlayer.start();
+                break;
+            case STARTSOUND:
+                Log.d(TAG, "START: " );
+                mFeedbackstartMediaPlayer.start();
                 break;
 
 

@@ -71,12 +71,16 @@ public class ScoreFragment extends Fragment {
             tvSong.setText(String.valueOf(score.getSongId()));
             if(score.getStat()<50){
                 ivThrophy.setImageResource(R.drawable.failtrophy);
+                activity.playFeedback(9);
             }else if(score.getStat()>=50 && score.getStat()< 75){
                 ivThrophy.setImageResource(R.drawable.bronzetrophy);
+                activity.playFeedback(6);
             }else if(score.getStat()>=75 && score.getStat()< 90){
                 ivThrophy.setImageResource(R.drawable.silvertrophy);
+                activity.playFeedback(7);
             }else if(score.getStat()>=90 ){
                 ivThrophy.setImageResource(R.drawable.goldtrophy);
+                activity.playFeedback(8);
             }
             ValueAnimator valueAnimator = ValueAnimator.ofInt(0, score.getStat());
             valueAnimator.setDuration(2000);

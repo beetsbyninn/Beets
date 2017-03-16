@@ -262,7 +262,7 @@ public class Threshold {
         public void run() {
             try {
                 mCurrentStep = buffer.remove();
-                if (mCurrentScore >= 0) {
+                if (mCurrentStep >= 0) {
                     double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
                     //int currentBeat = getBeatInSong(currentTimeInSong);
                     //double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
@@ -322,6 +322,7 @@ public class Threshold {
         long dif = Math.abs(System.currentTimeMillis() - timePause);
         startThreshold(mStartTime + dif);
         Log.d(TAG, "start: " + mBarValue);
+        mListener.playFeedback(9);
     }
 
     /**
@@ -361,7 +362,7 @@ public class Threshold {
         public void run() {
             int score = (int) mBarValue;
 
-            if (score <= EXCELLENT && score >= 50) {
+            if (score <= EXCELLENT && score > 50) {
                 Log.d(TAG, "EXCELLENT: " + score);
                 if (mScoreFeedback != 1) {
                     mScoreFeedback = 1;
