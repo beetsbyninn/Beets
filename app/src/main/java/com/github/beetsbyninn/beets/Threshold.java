@@ -221,25 +221,27 @@ public class Threshold {
 
         @Override
         public void run() {
-            mListener.update(mCurrentScore);
-            double temp = mBarValue + mCurrentScore;
-            if (100 >= temp && 0 <= temp) {
-                mBarValue += mCurrentScore;
-                mListener.update(mBarValue);
-                Log.d(TAG, "barvalue inc: " + mBarValue);
-            } else {
-                if (temp >= 100) {
-                    mBarValue = 100;
+            if (!mWarmup) {
+                mListener.update(mCurrentScore);
+                double temp = mBarValue + mCurrentScore;
+                if (100 >= temp && 0 <= temp) {
+                    mBarValue += mCurrentScore;
                     mListener.update(mBarValue);
-                    Log.d(TAG, "barvalue 100: " + mBarValue);
-                } else if (temp <= 0) {
-                    mBarValue = 0;
-                    mListener.update(mBarValue);
-                    Log.d(TAG, "barvalue 0: " + mBarValue);
+                    Log.d(TAG, "barvalue inc: " + mBarValue);
+                } else {
+                    if (temp >= 100) {
+                        mBarValue = 100;
+                        mListener.update(mBarValue);
+                        Log.d(TAG, "barvalue 100: " + mBarValue);
+                    } else if (temp <= 0) {
+                        mBarValue = 0;
+                        mListener.update(mBarValue);
+                        Log.d(TAG, "barvalue 0: " + mBarValue);
+                    }
                 }
-            }
 
-            mCurrentScore = 0;
+                mCurrentScore = 0;
+            }
 
         }
     }
@@ -254,27 +256,28 @@ public class Threshold {
         public void run() {
             try {
                 mCurrentStep = buffer.remove();
-                double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
-                //int currentBeat = getBeatInSong(currentTimeInSong);
-                //double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
-                double difference = (currentTimeInSong % intervalLength) * 1000.0;
+                if (mCurrentScore >= 0) {
+                    double currentTimeInSong = (mCurrentStep - mStartTime) / 1000.0;
+                    //int currentBeat = getBeatInSong(currentTimeInSong);
+                    //double differenceNext = (perodicArray[currentBeat + 1] % intervalLength) * 1000.0;
+                    double difference = (currentTimeInSong % intervalLength) * 1000.0;
 //                Log.i(TAG, "timeStamp" + timeStamp);
 //                Log.i(TAG, "currentTimeInSong: " + currentTimeInSong);
 //                Log.i(TAG, "diff " + difference);
 //                Log.i(TAG, "nextdiff: " + differenceNext);
-                Log.i(TAG, "run: " + difference);
-                if (!mWarmup) {
-                    if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
-                        mCurrentScore += 1;
-                        Log.e(TAG, "PERFECT");
-                    } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
-                        mCurrentScore += 0.75;
-                        Log.e(TAG, "GOOD");
-                    } else {
-                        Log.e(TAG, "FAIL");
+                    Log.i(TAG, "run: " + difference);
+                    if (!mWarmup) {
+                        if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
+                            mCurrentScore += 1;
+                            Log.e(TAG, "PERFECT");
+                        } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
+                            mCurrentScore += 0.75;
+                            Log.e(TAG, "GOOD");
+                        } else {
+                            Log.e(TAG, "FAIL");
+                        }
                     }
                 }
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

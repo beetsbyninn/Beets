@@ -14,20 +14,16 @@ public class StepBuffer {
     private List<Long> stepTimeStamps = new ArrayList<>();
 
     public synchronized long remove() throws InterruptedException {
-        while (stepTimeStamps.isEmpty()) {
-            wait();
-        }
 
-        long timetamp = stepTimeStamps.remove(0);
-        notifyAll();
-        return timetamp;
+        if (stepTimeStamps.isEmpty()) {
+            return -1;
+        } else {
+            long timetamp = stepTimeStamps.remove(0);
+            return timetamp;
+        }
     }
 
     public synchronized void add(long timeStamp) throws InterruptedException {
-        while (stepTimeStamps.size() >= 2) {
-            wait();
-        }
         stepTimeStamps.add(timeStamp);
-        notifyAll();
     }
 }
