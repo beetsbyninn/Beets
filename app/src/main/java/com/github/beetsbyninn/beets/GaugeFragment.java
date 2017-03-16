@@ -34,6 +34,7 @@ public class GaugeFragment extends Fragment {
     private boolean isPlaying = false;
     private  ProgressBar progressBar;
     private  boolean firstime=true;
+    private boolean screenOn ;
 
     public GaugeFragment()
     {
@@ -67,9 +68,25 @@ public class GaugeFragment extends Fragment {
 
     }
 
+    public boolean isScreenOn() {
+        return screenOn;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        screenOn = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        screenOn= false;
+    }
+
     /**
      * Sets the bar value.
-     * Author Ludwig Ninn
+     * Author Ludvig Ninn
      * @param score
      */
     public void updateScore(double score) {
@@ -84,7 +101,7 @@ public class GaugeFragment extends Fragment {
 
     /**
      * Button Listener. Have a pause and a start function.
-     * Author Ludwig Ninn
+     * Author Ludvig Ninn
      */
     private class ButtonPlayListener implements View.OnClickListener {
         @Override

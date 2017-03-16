@@ -9,16 +9,18 @@ public class Song {
     private String mSongTitle;
     private String mSongArtist;
 
+    private int mId;
     private int mBpm;
     private int mSongLength;
     private int mResourceId;
 
-    public Song(String title, String artist, int bpm, int songLength, int resourceId) {
+    public Song(String title, String artist, int bpm, int songLength, int resourceId, int id) {
         mSongTitle = title;
         mSongArtist = artist;
         mBpm = bpm;
         mSongLength = songLength;
         mResourceId = resourceId;
+        mId = id;
     }
 
     public String getSongTitle() {
@@ -39,5 +41,9 @@ public class Song {
 
     public int getResourceId() {
         return mResourceId;
+    }
+
+    public int getId(){
+        return mId;
     }
 }

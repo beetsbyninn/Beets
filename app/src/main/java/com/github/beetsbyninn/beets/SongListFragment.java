@@ -11,17 +11,17 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class SongListFragment extends Fragment {
-    private ArrayList<Song> mSongList;
-
+    private ArrayList<Song> mSongList = new ArrayList<Song>();
+    private MainActivity activity ;
     public SongListFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mSongList = new ArrayList<>();
-        mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 184, R.raw.shutup));
-        mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 194, R.raw.callmemaybe));
+
+        activity = (MainActivity) getActivity();
+        mSongList = activity.getSongList();
 
         return inflater.inflate(R.layout.fragment_songlist, container, false);
     }
@@ -35,7 +35,7 @@ public class SongListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // move to gauge
-                MainActivity activity = (MainActivity) getActivity();
+
                 Song song = (Song) parent.getItemAtPosition(position);
                 activity.setSong(song);
                 activity.initGaugeFragment();

@@ -52,7 +52,8 @@ public class MenyFragment extends Fragment {
         buttonHighScore = (Button) view.findViewById(R.id.buttonHighScore);
         buttonHighScore.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
+                mainActivty.initHighScore();
+
             }
         });
         return view;

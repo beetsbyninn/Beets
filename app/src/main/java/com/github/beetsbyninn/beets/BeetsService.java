@@ -43,7 +43,7 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
     public void startSong(Song song, long startTime) {
         Log.d(TAG, "startSong: " + song.getSongTitle() + " " + song.getSongArtist());
         sensorHandler.registerListener();
-        mThreshold = new Threshold(50.0, 125.0, song.getBpm(), song.getSongLength(), mListener, this);
+        mThreshold = new Threshold(50.0, 125.0, song, mListener, this);
         mThreshold.startThreshold(startTime);
     }
 
