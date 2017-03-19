@@ -47,7 +47,7 @@ public class Threshold {
     private static final int RAMPAGE = 90;
     private static final int GODLIKE = 100;
     private boolean mWarmup = false;
-    private int mTotalScore;
+    private double mTotalScore;
     /**
      * Constant used for measuring time when step should count as perfect.
      */
@@ -260,6 +260,7 @@ public class Threshold {
 
         @Override
         public void run() {
+            Log.d("warmup", String.valueOf(mWarmup));
             try {
                 mCurrentStep = buffer.remove();
                 if (mCurrentStep >= 0) {
@@ -275,21 +276,24 @@ public class Threshold {
                     if (!mWarmup) {
                         if (difference < M_PERFECT || (intervalLength * 1000) - difference <= M_PERFECT) {
                             mCurrentScore += 1;
+                            mTotalScore += 1;
                             Log.e(TAG, "PERFECT");
                         } else if (difference < M_GOOD || (intervalLength * 1000) - difference <= M_GOOD) {
                             mCurrentScore += 0.75;
+                            mTotalScore += 0.75;
                             Log.e(TAG, "GOOD");
                         } else {
                             Log.e(TAG, "FAIL");
                         }
                     }
-                    mTotalScore+=mCurrentScore;
+                    //Log.d("currentscore", String.valueOf(mCurrentScore));
+                    Log.d("totalscore", String.valueOf(mTotalScore));
                 }
                 double timeInSong = (System.currentTimeMillis() - mStartTime) / 1000.0;
                 Log.d("timeInsong",String.valueOf(timeInSong) + " max: " + mSongLength);
                 if(((int) timeInSong) >= mSongLength) {
                     pause();
-                    Score score = new Score(mTotalScore,mSong.getId());
+                    Score score = new Score((int)mTotalScore,mSong.getId());
                     mListener.setSongEnded(true);
                     mListener.songEnded(score);
                 }

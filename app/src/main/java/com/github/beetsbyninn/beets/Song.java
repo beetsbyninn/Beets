@@ -8,7 +8,7 @@ package com.github.beetsbyninn.beets;
 public class Song {
     private String mSongTitle;
     private String mSongArtist;
-
+    private double maxScore;
     private int mId;
     private int mBpm;
     private int mSongLength;
@@ -19,6 +19,7 @@ public class Song {
         mSongArtist = artist;
         mBpm = bpm;
         mSongLength = songLength;
+        maxScore = songLength/(60.0/bpm);
         mResourceId = resourceId;
         mId = id;
     }
@@ -45,5 +46,9 @@ public class Song {
 
     public int getId(){
         return mId;
+    }
+
+    public double getMaxScore(){
+        return maxScore;
     }
 }

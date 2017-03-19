@@ -14,12 +14,12 @@ import java.util.Locale;
 
 /**
  * Adapter to handle all the scores stored in the Database and present them in a listview.
- * Created by Jonte on 14-Mar-17.
+ * Created by Jonatan on 14-Mar-17.
  */
 
 public class ScoreListAdapter extends ArrayAdapter<Score> {
     Context context;
-    Score[] data;
+
     private ArrayList<Song> songlist = new ArrayList<Song>();
     private LayoutInflater inflater = null;
     private TextView tvScore;
@@ -49,6 +49,7 @@ public class ScoreListAdapter extends ArrayAdapter<Score> {
             viewHolder = new ScoreListAdapter.ViewHolder();
             // Find TextViews in list item style
             viewHolder.tvListScore = (TextView) convertView.findViewById(R.id.tvListScore);
+            viewHolder.tvListSongName = (TextView)convertView.findViewById(R.id.tvListSongName);
 
             // Set ViewHolder as tag for inflated view
             convertView.setTag(viewHolder);
@@ -57,12 +58,13 @@ public class ScoreListAdapter extends ArrayAdapter<Score> {
             viewHolder = (ScoreListAdapter.ViewHolder) convertView.getTag();
         }
 
-        // Set element to Sensor name
+        // Sets the highscore and songname in the textviews.
         if(score != null) {
             MainActivity activity = (MainActivity)context;
             songlist = activity.getSongList();
             Song song = songlist.get(score.getSongId());
-            viewHolder.tvListScore.setText("Song: " + song.getSongTitle() + "\nHighscore: " + score.getStat());
+            viewHolder.tvListScore.setText("Highscore: " + score.getStat() + "/" + (int)song.getMaxScore());
+            viewHolder.tvListSongName.setText("Song: " + song.getSongTitle());
 
 
 
@@ -75,6 +77,7 @@ public class ScoreListAdapter extends ArrayAdapter<Score> {
      */
     private static class ViewHolder {
         TextView tvListScore;
+        TextView tvListSongName;
 
     }
 }

@@ -84,7 +84,11 @@ public class MainActivity extends AppCompatActivity {
         mSongList = new ArrayList<>();
         mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 195, R.raw.shutup,0));
         mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 184, R.raw.callmemaybe,1));
-        mSongList.add(new Song("TestSong", "Jonte", 104, 79, R.raw.testsongglue,2));
+        mSongList.add(new Song("Casin", "Glue70", 104, 79, R.raw.testsongglue,2));
+        mSongList.add(new Song("Mary had a little boy", "SNAP!", 121, 217, R.raw.mary,3));
+        mSongList.add(new Song("Sex Bomb", "Tom Jones", 123, 210, R.raw.sexbomb,4));
+
+
 
     }
 
