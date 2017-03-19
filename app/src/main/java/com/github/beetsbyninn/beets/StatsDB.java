@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * The database class that store all the high scores
- * Created by Jonte on 13-Mar-17.
+ * Created by Jonte and Oscar on 13-Mar-17.
  */
 
 public class StatsDB extends SQLiteOpenHelper {

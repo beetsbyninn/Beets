@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A buffer class that storage the timestamps from when a step was taken
  * Created by patriklarsson on 2017-03-07.
  */
 

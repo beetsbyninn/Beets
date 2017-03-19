@@ -16,6 +16,7 @@ import android.os.Bundle;
 
 /**
  * Class that represent the tutorial slides
+ * @author Oscar
  */
 public class TutorialActivity extends AppCompatActivity {
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 /**
  * Class that represent the splash screen (that screen with the logo BEETS)
+ * @author Oscar and Jonatan
  */
 public class OnStartActivty extends AppCompatActivity {
     private TextView tvLogo;
