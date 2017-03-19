@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
         mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 184, R.raw.callmemaybe,1));
         mSongList.add(new Song("Casin", "Glue70", 104, 79, R.raw.testsongglue,2));
         mSongList.add(new Song("Sex Bomb", "Tom Jones", 123, 210, R.raw.sexbomb,3));
+        mSongList.add(new Song("Shake that ass", "Booty Bass", 135, 233, R.raw.shakethatass,4));
+        mSongList.add(new Song("Get f*cked up", "Stevie Stone", 86, 182, R.raw.getfuckedup,5));
 
     }
 

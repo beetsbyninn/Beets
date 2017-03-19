@@ -76,7 +76,7 @@ public class ScoreFragment extends Fragment {
             double maxScore = song.getMaxScore();
             Log.d("maxscore", String.valueOf(maxScore));
             tvSong.setText(song.getSongTitle());
-            if(score.getStat()<(0.3*maxScore)){
+            if(score.getStat()<(0.4*maxScore)){
                 ivThrophy.setImageResource(R.drawable.failtrophy);
                 activity.playFeedback(9);
             }else if(score.getStat()>=maxScore*0.4 && score.getStat()< maxScore*0.6){
