@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.os.Bundle;
 
+/**
+ * Class that represent the tutorial slides
+ */
 public class TutorialActivity extends AppCompatActivity {
 
     @Override
@@ -29,11 +32,20 @@ public class TutorialActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Adapter that make it possible the change slides
+     */
     private class MyAdapter extends PagerAdapter {
         public int getCount() {
             return 4;
         }
 
+        /**
+         * Method that changes the layout file that is shown
+         * @param container
+         * @param position - Which slide the user is on
+         * @return - a layout file
+         */
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View view = null;
@@ -61,31 +73,19 @@ public class TutorialActivity extends AppCompatActivity {
 
         }
 
-        /*
-        @Override
-        public void destroyItem(View arg0, int arg1, Object arg2) {
-            ((ViewPager) arg0).removeView((View) arg2);
-        }
-
-        */
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View)object);
         }
-
-        /*
-        @Override
-        public Parcelable saveState() {
-            return null;
-        }
-        */
 
         @Override
         public boolean isViewFromObject(View arg0, Object arg1) {
             return arg0 == ((View) arg1);
         }
 
+        /**
+         * Method that start another activity when button is pressed
+         */
         private class ButtonListener implements OnClickListener {
             @Override
             public void onClick(View v) {
