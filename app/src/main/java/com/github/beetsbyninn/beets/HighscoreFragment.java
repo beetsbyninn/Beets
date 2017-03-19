@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 /**
  * A fragment displaying the hisghscores for every song.
- *
  * @author Jonatan Wahlstedt
  */
 public class HighscoreFragment extends Fragment {
