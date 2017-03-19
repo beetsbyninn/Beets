@@ -8,11 +8,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * author Patrik Larsson, Ludwig Ninn, Alexander Johansson.
+ * The main logic class that contains the majority of the logic.
+ * Author Patrik Larsson, Ludwig Ninn, Alexander Johansson.
  */
 public class Threshold {
     private static final String TAG = "Threshold";
-
     private boolean startCheck;
     private int mCurrentMaxScore = 0;
     private double mCurrentScore = 0;
@@ -24,13 +24,11 @@ public class Threshold {
     private Timer mStepTimer;
     private Timer mFeedbackTimer;
     private StepBuffer buffer;
-    // private Worker worker;
     private MainActivity mListener;
     private Context mContext;
     private double[] perodicArray;
     private Song mSong;
     private int mSongLength;
-
     private long mLastStep;
     private long mCurrentStep;
     private Vibrate mVibrator;
@@ -48,6 +46,9 @@ public class Threshold {
     private static final int GODLIKE = 100;
     private boolean mWarmup = false;
     private int mTotalScore;
+    private double intervalLength;
+    private int mScoreFeedback = 0;
+
     /**
      * Constant used for measuring time when step should count as perfect.
      */
@@ -57,8 +58,7 @@ public class Threshold {
      * Constant used for measuring time when step should count as good
      */
     private final double M_GOOD;
-    private double intervalLength;
-    private int mScoreFeedback = 0;
+
 
 
     /**

@@ -110,7 +110,10 @@ public class ScoreFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Set the score.
+     * @param score
+     */
     public void setScore(Score score) {
         this.score = score;
     }

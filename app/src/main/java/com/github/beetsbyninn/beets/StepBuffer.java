@@ -12,7 +12,12 @@ import java.util.List;
 public class StepBuffer {
     private static final String TAG = "StepBuffer";
     private List<Long> stepTimeStamps = new ArrayList<>();
-    
+
+    /**
+     * Removes a timestamp.
+     * @return
+     * @throws InterruptedException
+     */
     public synchronized long remove() throws InterruptedException {
 
         if (stepTimeStamps.isEmpty()) {
@@ -23,6 +28,11 @@ public class StepBuffer {
         }
     }
 
+    /**
+     * Adds a timestamp.
+     * @param timeStamp
+     * @throws InterruptedException
+     */
     public synchronized void add(long timeStamp) throws InterruptedException {
         stepTimeStamps.add(timeStamp);
     }

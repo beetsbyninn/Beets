@@ -112,6 +112,10 @@ public class SensorHandler implements SensorEventListener {
         mSensorManager.unregisterListener(this);
     }
 
+    /**
+     * Set the pause boolean.
+     * @param set
+     */
     public void pause(boolean set){
         pause=set;
     }

@@ -10,6 +10,9 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * Shows the songs available.
+ */
 public class SongListFragment extends Fragment {
     private ArrayList<Song> mSongList = new ArrayList<Song>();
     private MainActivity activity ;

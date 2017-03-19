@@ -22,17 +22,26 @@ public class Score {
     }
 
     /**
-     * 
+     * Return songid.
      * @return
      */
     public int getSongId() {
         return songId;
     }
 
+
+    /**
+     * Sets the stat.
+     * @param stat
+     */
     public void setStat(int stat) {
         this.stat = stat;
     }
 
+    /**
+     * Sets the song id.
+     * @param songId
+     */
     public void setSongId(int songId) {
         this.songId = songId;
     }
