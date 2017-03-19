@@ -16,7 +16,8 @@ import java.util.ArrayList;
 
 
 /**
- *
+ *  Mainactitvity act as a controll class.
+ *  Author Alexander Johansson,Jonatan Wahlstedt,Ludwig Ninn,Oscar Sandberg,Patrik Larsson
  */
 public class MainActivity extends AppCompatActivity {
     private long timePause;
@@ -32,9 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Song> mSongList;
     private boolean songEnded = false;
     private ScoreFragment scoreFragment;
-
     private Song mSong;
-
     private MusicPlayer mMusicPlayer;
     private boolean mIsplaying = false;
 
@@ -60,17 +59,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Initialises the highscorefragment
+     */
     public void initHighScore(){
         HighscoreFragment  highscoreFragment = new HighscoreFragment();
         setFragment(highscoreFragment, true);
     }
 
+    /**
+     * Initialises the meny.
+     */
     public void initMeny(){
         MenyFragment  menyFragment = new MenyFragment();
         setFragment(menyFragment, false);
     }
 
+    /**
+     * Initialises the gaugefragment
+     */
     public void initGaugeFragment() {
         mMusicPlayer = new MusicPlayer(this, mSong);
         mMusicPlayer.initSongMediaPlayer();
@@ -80,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         setFragment(gaugeFragment, false);
     }
 
+    /**
+     * Initialises the songs.
+     */
     public void initSongs(){
         mSongList = new ArrayList<>();
         mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 195, R.raw.shutup,0));
@@ -88,15 +98,13 @@ public class MainActivity extends AppCompatActivity {
         mSongList.add(new Song("Mary had a little boy", "SNAP!", 121, 217, R.raw.mary,3));
         mSongList.add(new Song("Sex Bomb", "Tom Jones", 123, 210, R.raw.sexbomb,4));
 
-
-
     }
 
 
-
-
+    /**
+     * Initialises songlistfragment.
+     */
     public void initSongListFragment() {
-
         songListFragment = new SongListFragment();
         setFragment(songListFragment, false);
     }
@@ -153,20 +161,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     *
+     *Initialises the game.
      */
     public void initialise() {
         if(!mIsplaying) {
             mBeetsService.startSong(mSong, System.currentTimeMillis());
             mMusicPlayer.playSong();
             mIsplaying = true;
+            sensorHandler.pause(true);
         } else {
             mMusicPlayer.stopSong();
             mIsplaying = false;
         }
     }
 
-
+    /**
+     * Sets current fragment.
+     * @param fragment
+     * @param backstack
+     */
     public void setFragment(Fragment fragment, boolean backstack) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -225,25 +238,50 @@ public class MainActivity extends AppCompatActivity {
         this.mVibrator = mVibrator;
     }
 
+    /**
+     * Sets sensorhandler.
+     * @param sensorHandler
+     */
     public void setSensorHandler(SensorHandler sensorHandler) {
         this.sensorHandler = sensorHandler;
     }
+
+    /**
+     * Sets threshold.
+     * @param threshold
+     */
     public void setThreshold(Threshold threshold) {
         this.threshold = threshold;
     }
+
+    /**
+     * Checks current state.
+     */
     public void checkStartPause(){
         gaugeFragment.checkStartPause();
     }
 
+    /**
+     *Sets the current song.
+     * @param song
+     */
     public void setSong(Song song) {
         mSong = song;
     }
 
+    /**
+     * Returns the current songlist.
+     * @return
+     */
     public ArrayList<Song> getSongList(){
 
         return mSongList;
     }
 
+    /**
+     * Plays feedback sound.
+     * @param i
+     */
     public void playFeedback(int i) {
         try {
             mMusicPlayer.playFeedback(i);
@@ -258,10 +296,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Indicates that the song is finished.
+     * @param b
+     */
     public void setSongEnded(boolean b) {
         songEnded = b;
     }
 
+    /**
+     * Called when the song is ended. Unbinds and start a new scorefragment.
+     * @param score
+     */
     public void songEnded(Score score) {
         unbind();
         scoreFragment = new ScoreFragment();
@@ -274,6 +320,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Unbinds and stops all current activitys.
+     *  Author Ludwig Ninn
+     */
     public void unbind(){
 
         sensorHandler.onDestroy();

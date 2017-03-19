@@ -51,7 +51,6 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
     @Override
     public void onCreate() {
         super.onCreate();
-
         sensorHandler = new SensorHandler(this, this, this);
     }
 
@@ -75,6 +74,11 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
         mThreshold.postTimeStamp(currentTime);
     }
 
+    /**
+     * Method that turn on/ turn off the screen depending if something is in front of the
+     * proximity sensor
+     * @param mLuxValueFromSensor
+     */
     @Override
     public void onCoverDetected(float mLuxValueFromSensor) {
 
@@ -95,8 +99,6 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
            //Toast.makeText(getApplicationContext(), "Proximity off", Toast.LENGTH_LONG).show();
             if (mWakeLock != null && mWakeLock.isHeld()) {
                 mWakeLock.release();
-
-
             }
 
         }

@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+/**
+ * Class that represent the splash screen (that screen with the logo BEETS)
+ * @author Oscar and Jonatan
+ */
 public class OnStartActivty extends AppCompatActivity {
     private TextView tvLogo;
     private SharedPreferences mSharedPreferences = null;
@@ -23,6 +27,10 @@ public class OnStartActivty extends AppCompatActivity {
         startAnotherActivity();
     }
 
+    /**
+     * Method that start another activity. Which activity that will start depends on if it's the
+     * first time the app is lunched or not.
+     */
     public void startAnotherActivity(){
         Thread splashScreenThread = new Thread(){
             @Override

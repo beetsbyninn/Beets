@@ -34,6 +34,10 @@ public class BeetsServiceConnection implements ServiceConnection {
     public void onServiceDisconnected(ComponentName componentName) {
         mMainAcitivty.setBound(false);
     }
+
+    /**
+     * Stops the service.
+     */
     public void stop(){
         service.stopSelf();
     }
