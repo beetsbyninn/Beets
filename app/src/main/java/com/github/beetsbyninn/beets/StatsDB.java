@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 /**
+ * The database class that store all the high scores
  * Created by Jonte on 13-Mar-17.
  */
 
@@ -40,6 +41,10 @@ public class StatsDB extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    /**
+     * Method that insert a new row in the database with a new score
+     * @param score
+     */
     public void addScore(Score score){
         ContentValues values = new ContentValues();
         values.put(KEY_STATS, score.getStat());
@@ -79,6 +84,11 @@ public class StatsDB extends SQLiteOpenHelper {
         return allScores;
     }
 
+    /**
+     * Returns high score for a specific song
+     * @param id - The songs id
+     * @return highscore
+     */
     public int getHighScore(int id){
 
         int statsIndex,songIndex;
@@ -100,6 +110,10 @@ public class StatsDB extends SQLiteOpenHelper {
         return highScore;
     }
 
+    /**
+     * Updates the database table
+     * @param score
+     */
     public void updateHighscore(Score score){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();

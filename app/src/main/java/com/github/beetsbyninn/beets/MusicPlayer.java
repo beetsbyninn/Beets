@@ -74,7 +74,7 @@ public class MusicPlayer {
     }
 
     /**
-     * Initializes feedback
+     * Initializes feedback sounds
      * @throws IOException
      */
     public void initFeedbackMediaPlayer() throws IOException {
