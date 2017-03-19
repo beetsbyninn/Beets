@@ -74,6 +74,11 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
         mThreshold.postTimeStamp(currentTime);
     }
 
+    /**
+     * Method that turn on/ turn off the screen depending if something is in front of the
+     * proximity sensor
+     * @param mLuxValueFromSensor
+     */
     @Override
     public void onCoverDetected(float mLuxValueFromSensor) {
 
