@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 
 /**
- *
+ *  Shows the score and is the main fragment for the game.
  * Author Ludwig Ninn
  * A simple {@link Fragment} subclass.
  */
@@ -111,6 +111,9 @@ public class GaugeFragment extends Fragment {
         }
     }
 
+    /**
+     * Checks what current state is. Changes corresponds to the current state.
+     */
     public void checkStartPause(){
 
         if(!isPlaying) {
