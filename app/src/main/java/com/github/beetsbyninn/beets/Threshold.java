@@ -334,7 +334,6 @@ public class Threshold {
         timer.cancel();
         mDecSoretimer.cancel();
         mFeedbackTimer.cancel();
-
         mStepTimer.cancel();
     }
 

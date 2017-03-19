@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         mSongList.add(new Song("Shut up and dance", "WALK THE MOON", 128, 195, R.raw.shutup,0));
         mSongList.add(new Song("Call me maybe", "Carly Rae Jepsen", 120, 184, R.raw.callmemaybe,1));
         mSongList.add(new Song("TestSong", "Jonte", 104, 79, R.raw.testsongglue,2));
-
     }
 
 
@@ -156,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
             mBeetsService.startSong(mSong, System.currentTimeMillis());
             mMusicPlayer.playSong();
             mIsplaying = true;
+            sensorHandler.pause(true);
         } else {
             mMusicPlayer.stopSong();
             mIsplaying = false;

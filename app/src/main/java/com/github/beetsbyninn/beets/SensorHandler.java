@@ -69,7 +69,9 @@ public class SensorHandler implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        Log.d(TAG, "onSensorChanged: innan");
         if(pause) {
+            Log.d(TAG, "onSensorChanged: efter");
             if (sensorEvent.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
                 if ((sensorEvent.timestamp - lastStepTimeStamp) > 30000000L) {
                     mListener.onStepDetected();
@@ -97,6 +99,7 @@ public class SensorHandler implements SensorEventListener {
      * Registers the sensors
      */
     public void registerListener() {
+        Log.d(TAG, "registerListener: running");
         mSensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, mProximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
     }

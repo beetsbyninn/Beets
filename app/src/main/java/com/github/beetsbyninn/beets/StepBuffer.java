@@ -12,7 +12,7 @@ import java.util.List;
 public class StepBuffer {
     private static final String TAG = "StepBuffer";
     private List<Long> stepTimeStamps = new ArrayList<>();
-
+    
     public synchronized long remove() throws InterruptedException {
 
         if (stepTimeStamps.isEmpty()) {

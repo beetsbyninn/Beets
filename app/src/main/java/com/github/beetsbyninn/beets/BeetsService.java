@@ -51,7 +51,6 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
     @Override
     public void onCreate() {
         super.onCreate();
-
         sensorHandler = new SensorHandler(this, this, this);
     }
 
@@ -95,8 +94,6 @@ public class BeetsService extends Service implements StepDetectorListener, Proxi
            //Toast.makeText(getApplicationContext(), "Proximity off", Toast.LENGTH_LONG).show();
             if (mWakeLock != null && mWakeLock.isHeld()) {
                 mWakeLock.release();
-
-
             }
 
         }
