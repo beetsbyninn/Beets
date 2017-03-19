@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 /**
+ * Shows the meny.
  * A simple {@link Fragment} subclass.
  */
 public class MenyFragment extends Fragment {

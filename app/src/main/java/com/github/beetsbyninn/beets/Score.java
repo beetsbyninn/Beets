@@ -13,10 +13,18 @@ public class Score {
         this.songId = songId;
     }
 
+    /**
+     * Return stats.
+     * @return
+     */
     public int getStat() {
         return stat;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getSongId() {
         return songId;
     }
