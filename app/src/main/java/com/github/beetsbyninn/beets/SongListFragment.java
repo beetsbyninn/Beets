@@ -11,7 +11,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 /**
- * Shows the songs available.
+ * Fragment class that represent fragment where you choose a song to play with
  */
 public class SongListFragment extends Fragment {
     private ArrayList<Song> mSongList = new ArrayList<Song>();
